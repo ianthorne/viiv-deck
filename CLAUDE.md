@@ -48,8 +48,10 @@ and role drift. These are two jobs with two loops:
   existing Implementation Routes category) mark which path steps the route leans on.
   This is the resolved form of the old "Sort & Defend" option: **physician sorts, AM
   asks.** Every sort state opens its own follow-up with its own AM line: knelt → what
-  pinches + what would help (barrier + wanted facilitator); loopt → how have you arranged
-  this (the WORKING facilitator — what Medical shares with centres where it pinches);
+  pinches + what would help (barrier + wanted facilitator); loopt → WHAT exactly is
+  arranged (the mechanism another centre can adopt) + WHY it works here (the
+  precondition it must also meet) — two fields, deliberately apart, because a facilitator
+  without its precondition is a recipe without ingredients;
   weet niet → who would know (not a dead end: the next person to talk to, usually the
   nurse or pharmacist). Never treat "loopt" as a state to skip past. Physical version: 5 path cards + 3 route cards + 3 zones on
   the table. Never let this drift back into a questionnaire the AM fills in.

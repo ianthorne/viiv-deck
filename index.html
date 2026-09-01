@@ -228,9 +228,9 @@ const T = {
     route_k:"Implementatieroute · optioneel", route_lead:"Leg er een routekaart bij: je ziet op welke stappen van het pad die route leunt.",
     route_none:"Geen route", leans:"leunt hierop",
     knelt_k:"Waar het knelt — vraag door", loopt_k:"Waar het loopt — vraag óók door", weet_k:"Waar je het niet weet",
-    loopt_q:"Hoe hebben jullie dit geregeld? Wat maakt dat het loopt?", weet_q:"Wie weet dit bij jullie?",
-    say_loopt:"Mooi dat dit loopt — hoe hebben jullie dat geregeld? Wat maakt dat het werkt?",
-    why_loopt:"Waar het loopt zit de oplossing die een ander centrum mist. Vraag door met dezelfde nieuwsgierigheid als bij een knelpunt; dit is wat we delen.",
+    loopt_what:"Wat precies loopt hier? Hoe is het geregeld?", loopt_why:"Waarom werkt het bij jullie? Wat is de voorwaarde?", weet_q:"Wie weet dit bij jullie?",
+    say_loopt:"Mooi dat dit loopt. Wat hebben jullie precies geregeld — en waarom werkt dat juist bij jullie?",
+    why_loopt:"Twee vragen, bewust apart. Het wát is het mechanisme dat een ander centrum kan overnemen; het waaróm is de voorwaarde waaraan het daar ook moet voldoen. Zonder het waarom deel je een recept zonder ingrediënten.",
     say_weet:"Geen probleem — wie zou dit bij jullie weten?",
     why_weet:"\u2018Weet niet\u2019 is geen dood spoor. Het wijst naar wie je hierna spreekt: vaak de verpleegkundige of de apotheker.",
     works_lbl:"Wat hier loopt", who_lbl:"Wie weet dit",
@@ -318,9 +318,9 @@ const T = {
     route_k:"Implementation route · optional", route_lead:"Add a route card: you see which steps of the path that route leans on.",
     route_none:"No route", leans:"leans on this",
     knelt_k:"Where it pinches — ask further", loopt_k:"Where it runs — ask further too", weet_k:"Where you don't know",
-    loopt_q:"How have you arranged this? What makes it run?", weet_q:"Who would know this in your practice?",
-    say_loopt:"Good that this runs — how have you arranged that? What makes it work?",
-    why_loopt:"Where it runs is the solution another centre is missing. Ask with the same curiosity as for a pinch; this is what we share.",
+    loopt_what:"What exactly runs here? How is it arranged?", loopt_why:"Why does it work for you? What is the precondition?", weet_q:"Who would know this in your practice?",
+    say_loopt:"Good that this runs. What exactly have you arranged — and why does that work here in particular?",
+    why_loopt:"Two questions, deliberately apart. The what is the mechanism another centre can adopt; the why is the precondition it must also meet. Without the why you share a recipe without the ingredients.",
     say_weet:"No problem — who would know this in your practice?",
     why_weet:"\u2018Don't know\u2019 is not a dead end. It points to who you speak to next: often the nurse or the pharmacist.",
     works_lbl:"What runs here", who_lbl:"Who knows this",
@@ -597,7 +597,7 @@ function mode1(){
     ${kn.length?`<div class="kicker">${t("knelt_k")}</div>`:""}
     ${kn.map(p=>panel(p, L(p.say), L(p.why), [["w",t("m1_what")],["h",t("m1_help")]])).join("")}
     ${lo.length?`<div class="kicker" style="margin-top:6px">${t("loopt_k")}</div>`:""}
-    ${lo.map(p=>panel(p, t("say_loopt"), t("why_loopt"), [["ok",t("loopt_q")]])).join("")}
+    ${lo.map(p=>panel(p, t("say_loopt"), t("why_loopt"), [["ok",t("loopt_what")],["okw",t("loopt_why")]])).join("")}
     ${we.length?`<div class="kicker" style="margin-top:6px">${t("weet_k")}</div>`:""}
     ${we.map(p=>panel(p, t("say_weet"), t("why_weet"), [["who",t("weet_q")]])).join("")}
     ${nav()}`;
@@ -695,10 +695,10 @@ function practicePanel(){
   const pp = practiceProfile();
   if(!pp) return `<div class="practice none">${t("practice_none")}</div>`;
   const kn=pp.filter(it=>it.st==="knelt"), lo=pp.filter(it=>it.st==="loopt");
-  const row=(it,txt)=>{ const sc=SCAN.find(x=>x.k===it.key); return `<div class="pin"><b>${L(sc.t)}</b><div>${esc(txt||"\u2014")}<div class="mn">${t("practice_means")}: ${L(sc.m)}</div></div></div>`; };
+  const row=(it,txt,sub)=>{ const sc=SCAN.find(x=>x.k===it.key); return `<div class="pin"><b>${L(sc.t)}</b><div>${esc(txt||"\u2014")}${sub?`<div class="mn">${t("why_k")}: ${esc(sub)}</div>`:""}<div class="mn">${t("practice_means")}: ${L(sc.m)}</div></div></div>`; };
   return `<div class="practice"><div class="ck">${t("practice_k")}</div><p class="lead2">${t("practice_lead")}</p>
     ${kn.length?`<div class="ck" style="margin-top:8px">${t("sort_knelt")}</div>`+kn.map(it=>row(it,it.w)).join(""):""}
-    ${lo.length?`<div class="ck" style="margin-top:12px">${t("works_lbl")}</div>`+lo.map(it=>row(it,it.ok)).join(""):""}</div>`;
+    ${lo.length?`<div class="ck" style="margin-top:12px">${t("works_lbl")}</div>`+lo.map(it=>row(it,it.ok,it.okw)).join(""):""}</div>`;
 }
 function shuffleProfile(){
   const idx=(PROFILES.indexOf(S.profile)+1)%PROFILES.length;
@@ -724,7 +724,7 @@ const show = el => { if(el) el.style.display="block"; };
 function collect(){
   const err=document.getElementById("err");
   if(S.mode==="m1"){
-    if(S.i===0) SCAN.forEach(p=>{ ["w","h","ok","who"].forEach(id=>{ const el=document.getElementById(id+"_"+p.k); if(el) S.caps[p.k+"_"+id]=el.value.trim(); }); });
+    if(S.i===0) SCAN.forEach(p=>{ ["w","h","ok","okw","who"].forEach(id=>{ const el=document.getElementById(id+"_"+p.k); if(el) S.caps[p.k+"_"+id]=el.value.trim(); }); });
     return true;
   }
   const doc=S.role==="doc";
@@ -748,7 +748,7 @@ function finish(){
     e.title = t("m1_name") + (route ? " · " + L(route.n) : "");
     SCAN.forEach(p=>{ const st=S.sort[p.k]||""; if(!st) return;
       const g=id=>S.caps[p.k+"_"+id]||"";
-      e.items.push({key:p.k, k:L(p.t), st, w:st==="knelt"?g("w"):"", h:st==="knelt"?g("h"):"", ok:st==="loopt"?g("ok"):"", who:st==="weet"?g("who"):""}); });
+      e.items.push({key:p.k, k:L(p.t), st, w:st==="knelt"?g("w"):"", h:st==="knelt"?g("h"):"", ok:st==="loopt"?g("ok"):"", okw:st==="loopt"?g("okw"):"", who:st==="weet"?g("who"):""}); });
   } else {
     e.title = `${t("m2_name")} · ${S.profile.name}`;
     e.twist = L(S.twist);
@@ -762,7 +762,7 @@ function logScreen(){
   const n=S.log.length;
   const body = S.log.map((r,idx)=>`<div class="entry">
       <div class="q">${t("round")} ${n-idx} · ${r.title}</div>
-      ${r.items.map(it=>{ const body = it.w||it.ok||it.who||""; return `<div><strong>${it.k}:</strong> ${it.st?`<em>${stLbl(it.st)}</em>${body?" — ":""}`:""}${esc(body)}${it.h?` <span class="muted">→ ${esc(it.h)}</span>`:""}</div>`; }).join("")}
+      ${r.items.map(it=>{ const body = it.w||it.ok||it.who||""; const tail = it.h ? `→ ${esc(it.h)}` : it.okw ? `${t("why_k")}: ${esc(it.okw)}` : ""; return `<div><strong>${it.k}:</strong> ${it.st?`<em>${stLbl(it.st)}</em>${body?" — ":""}`:""}${esc(body)}${tail?` <span class="muted">${tail}</span>`:""}</div>`; }).join("")}
       ${r.surfaced&&r.surfaced.length?`<div class="q" style="margin-top:6px">${t("surfaced_lbl")}: ${r.surfaced.map(esc).join(" · ")}</div>`:""}
       ${r.twist?`<div class="q">${t("twist_lbl")}: ${esc(r.twist)}</div>`:""}
     </div>`).join("");
@@ -777,7 +777,7 @@ function logScreen(){
 function copyLog(b){
   const n=S.log.length;
   const txt=S.log.map((r,idx)=>`${t("round")} ${n-idx} — ${r.title}\n`+
-    r.items.map(it=>{ const body=it.w||it.ok||it.who||""; return `  ${it.k}: ${it.st?stLbl(it.st)+(body?" — ":""):""}${body}${it.h?`  → ${it.h}`:""}`; }).join("\n")+
+    r.items.map(it=>{ const body=it.w||it.ok||it.who||""; const tail=it.h?`  → ${it.h}`:it.okw?`  (${t("why_k")}: ${it.okw})`:""; return `  ${it.k}: ${it.st?stLbl(it.st)+(body?" — ":""):""}${body}${tail}`; }).join("\n")+
     (r.surfaced&&r.surfaced.length?`\n  ${t("surfaced_lbl")}: ${r.surfaced.join(" · ")}`:"")+
     (r.twist?`\n  ${t("twist_lbl")}: ${r.twist}`:"")).join("\n\n");
   navigator.clipboard.writeText(txt).then(()=>{ const o=b.textContent; b.textContent=t("copied"); setTimeout(()=>b.textContent=o,1400); });
