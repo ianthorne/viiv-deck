@@ -39,10 +39,17 @@ Playtests showed "one loop with different emphasis" was too subtle: forcing barr
 mapping and an SDM conversation into one loop produced the patient-identification spiral
 and role drift. These are two jobs with two loops:
 
-- **Mode 1 — Treatment-path scan** (sceptics / undecided). **No patient.** The physician
-  is the expert on their own practice; the AM listens and maps where the path pinches
-  (capacity, scheduling & window, logistics/cold chain, funding/VoReZorg, follow-up).
-  Non-teaching by construction. Output: barrier map.
+- **Mode 1 — Treatment-path scan** (sceptics / undecided). **No patient.** A CARD
+  mechanic, not a form: five treatment-path cards laid as a row (capacity, scheduling &
+  window, logistics/cold chain, funding/VoReZorg, follow-up). **The physician sorts each
+  card** into loopt / knelt / weet niet with their own hands; only "knelt" opens the
+  follow-up (what pinches, what would help) with that card's AM voice-over line.
+  Optional implementation-route cards (in the clinic / home care / pharmacy — from the
+  existing Implementation Routes category) mark which path steps the route leans on.
+  This is the resolved form of the old "Sort & Defend" option: **physician sorts, AM
+  asks.** "Loopt" is captured too — where it works is what Medical wants to share with
+  centres where it doesn't. Physical version: 5 path cards + 3 route cards + 3 zones on
+  the table. Never let this drift back into a questionnaire the AM fills in.
 - **Mode 2 — Patient case** (believers / advanced). A rich, coherent patient is dealt.
   Loop: patient → opening → explore → provisional approach → twist → does it hold.
   Output: reflection + the barriers the conversation exposes.

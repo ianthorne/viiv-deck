@@ -136,6 +136,33 @@
   .bprompt label{font-size:11.5px;color:var(--muted);display:block;margin-bottom:4px;font-weight:500}
   .bprompt textarea{min-height:70px}
 
+  /* treatment-path board (Mode 1) */
+  .routes{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 22px}
+  .rchip{font-size:13px;padding:7px 12px;border:1px solid var(--soft);border-radius:999px;background:var(--paper);color:var(--ink)}
+  .rchip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+  .rchip:hover{border-color:var(--navy-soft)}
+  .path{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:0 0 6px}
+  @media (max-width:860px){ .path{grid-template-columns:repeat(3,1fr)} }
+  @media (max-width:560px){ .path{grid-template-columns:repeat(2,1fr)} }
+  .pcard{border:1px solid var(--navy-soft);border-radius:var(--r-lg);background:var(--paper);padding:14px 12px 12px;position:relative;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow);min-height:190px}
+  .pcard.knelt{border-color:var(--ink);border-width:2px}
+  .pcard.loopt{border-style:dashed}
+  .pcard.weet{border-color:var(--soft)}
+  .pcard .tab{position:absolute;top:-1px;left:14px;height:12px;width:32px;background:var(--viiv-sand);border-radius:0 0 6px 6px}
+  .pcard .sym{width:24px;height:24px;margin-top:8px}
+  .pcard .pt{font-size:13.5px;font-weight:600;line-height:1.25}
+  .pcard .ps{font-size:11.5px;color:var(--muted);line-height:1.4;flex:1}
+  .pcard .lean{font-size:10.5px;color:var(--ink);background:var(--wash);border:1px solid var(--viiv-sand);border-radius:999px;padding:2px 8px;align-self:flex-start}
+  .sort{display:flex;border:1px solid var(--soft);border-radius:999px;overflow:hidden;margin-top:6px}
+  .sort button{flex:1;border:none;border-radius:0;padding:5px 0;font-size:11px;font-weight:500;background:var(--paper);color:var(--ink)}
+  .sort button:hover{background:var(--wash)}
+  .sort button.on{background:var(--ink);color:#fff}
+  .hint{font-size:12.5px;color:var(--muted);margin:0 0 20px}
+  .kpanel{border:1px solid var(--soft);border-radius:var(--r);background:var(--paper);padding:16px 18px;margin:0 0 12px;box-shadow:var(--shadow)}
+  .kpanel .kt{font-size:16px;font-weight:600;margin:0 0 2px;display:flex;align-items:center;gap:8px}
+  .kpanel .kt .sym{width:20px;height:20px;margin:0}
+  .kpanel .say{margin:10px 0 12px}
+  .kpanel .say .line{font-size:15px}
   /* AM voice-over — the training layer */
   .say{background:var(--wash);border-radius:var(--r);padding:16px 18px;margin:0 0 18px;max-width:64ch}
   .say .ck{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:500}
@@ -194,9 +221,13 @@ const T = {
     copy:"Kopieer barrièrekaart", copied:"Gekopieerd",
     need_text:"Noteer eerst kort wat er boven tafel kwam.", need_choice:"Kies eerst een aanpak.",
     step:"Stap",
-    m1_h:"Waar knelt het behandelpad?",
-    m1_lead:"Geen goed of fout. De arts vertelt hoe het in déze praktijk loopt; jij noteert wat knelt en wat zou helpen. Sla over wat niet speelt.",
+    m1_h:"Leg het behandelpad op tafel",
+    m1_lead:"Vijf kaarten, één pad. De arts sorteert zelf: loopt het, knelt het, of weet je het niet? Alleen waar het knelt vraag je door. Jij houdt de pen, de arts de kaarten.",
     m1_what:"Wat knelt hier?", m1_help:"Wat zou helpen?",
+    sort_loopt:"Loopt", sort_knelt:"Knelt", sort_weet:"Weet niet",
+    route_k:"Implementatieroute · optioneel", route_lead:"Leg er een routekaart bij: je ziet op welke stappen van het pad die route leunt.",
+    route_none:"Geen route", leans:"leunt hierop", knelt_k:"Waar het knelt — vraag door",
+    sorted_hint:"Sorteer de kaarten; bij \u2018Knelt\u2019 opent het doorvragen.",
     case_k:"De patiënt", case_h:"Je patiënt vandaag",
     case_lead_doc:"Een uitgedeelde casus — een gegeven, geen puzzel. Lees het dossier zoals je een echt dossier zou lezen. De facilitator tegenover je speelt zo dadelijk [naam]: alles wat je wilt weten, vraag je hardop.",
     case_lead_fac:"Jij bent straks deze patiënt. Lees het dossier én de verborgen feiten: die geef je alleen prijs als de arts er open naar vraagt.",
@@ -230,7 +261,7 @@ const T = {
     d_demo:"Demografie", d_med:"Medisch beeld", d_care:"Zorggebruik", d_life:"Leefstijl", d_prio:"Wat de patiënt belangrijk vindt",
     d_flag:"Casusfeiten · fictief · plausibiliteit te toetsen door Medical", d_reg:"Specificatie huidige middel: [ViiV — in afwachting]",
     hidden_k:"Verborgen feiten — alleen als gevraagd", cue:"Komt los bij:",
-    m1_steps:["Capaciteit","Planning","Logistiek","Financiering","Opvolging","Afronden"],
+    m1_steps:["Behandelpad","Afronden"],
     m2_steps:["Patiënt","Openen","Verkennen","Aanpak","Twist","Houdt het stand?"],
     say_k:"Wat je letterlijk zegt", why_k:"Waarom zo",
     rules:"Dit is geen test en geen pitch. Er is geen goed antwoord. We kijken alleen waar het in de praktijk knelt.",
@@ -247,12 +278,8 @@ const T = {
     practice_lead:"Uit de scan: hier knelt het in deze praktijk. Geen verdict over een optie — een gegeven dat de patiënt mee kan wegen. Is dit voor déze patiënt een drempel, of niet?",
     practice_means:"Voor het gesprek",
     m1_say:[
-      {say:"Ik ben benieuwd hoe het bij jullie loopt — niet hoe het zou moeten. Als we het behandelpad langslopen: wie doet wat, en waar wordt het krap?", why:"Je opent als luisteraar. De arts is de expert over de eigen praktijk; jij hebt geen antwoord bij je."},
-      {say:"Stel dat een behandeling strakkere afspraakvensters vraagt — hoe past dat in jullie agenda? En wat gebeurt er nu als iemand een afspraak mist?", why:"Hypothetisch vragen haalt de lading eraf. Je toetst een praktijk, geen persoon."},
-      {say:"Koeling, voorraad, apotheek, bezorging aan huis — waar zou de keten bij jullie als eerste vastlopen?", why:"Concreet en operationeel. Hier komen barrières boven die in geen enkele folder staan."},
-      {say:"Wie zou de extra bezoeken en de toediening moeten dragen — en is er een route die bij jullie realistisch is?", why:"Financiering is vaak het echte knelpunt. Vraag naar haalbaar, niet naar wenselijk."},
-      {say:"Als iemand niet reageert of wegblijft — wie merkt dat, en wie belt?", why:"Opvolging is de barrière die het minst zichtbaar is en het meest bepaalt."},
-      {say:"Dank je. Wat ik heb genoteerd is wat knelt en wat zou helpen — klopt dat zo? Dit gaat naar ons team om te kijken waar wij kunnen ondersteunen.", why:"Je sluit eerlijk af met wat er met de inzichten gebeurt. Dat maakt de volgende keer makkelijker."}
+      {say:"Ik leg vijf kaarten neer — dat is het behandelpad, van capaciteit tot opvolging. Wil je ze zelf even sorteren: wat loopt, wat knelt, en waar je het niet weet? Er is geen goed antwoord.", why:"De arts sorteert met de handen; jij vraagt. Zo is de arts de expert en jij de luisteraar — niet de interviewer."},
+      {say:"Dank je. Wat ik heb genoteerd is waar het knelt en wat zou helpen — en ook waar het bij jullie juist goed loopt. Klopt dat zo? Dit gaat naar ons team om te kijken waar wij kunnen ondersteunen.", why:"Je sluit eerlijk af met wat er met de inzichten gebeurt. Waar het wél loopt is net zo waardevol: dat kunnen we delen met centra waar het knelt."}
     ],
     m2_say:[
       {say:"Ik geef je een patiënt. Geen puzzel om op te lossen — gewoon iemand die vandaag in je spreekkamer zit. Neem even de tijd voor het dossier.", why:"'Gegeven, geen puzzel' voorkomt dat de arts de patiënt gaat identificeren in plaats van het gesprek te voeren."},
@@ -277,9 +304,13 @@ const T = {
     copy:"Copy barrier map", copied:"Copied",
     need_text:"First note briefly what came up.", need_choice:"Choose an approach first.",
     step:"Step",
-    m1_h:"Where does the treatment path pinch?",
-    m1_lead:"No right or wrong. The physician describes how it runs in this practice; you note what pinches and what would help. Skip what doesn't apply.",
+    m1_h:"Lay the treatment path on the table",
+    m1_lead:"Five cards, one path. The physician sorts them: runs fine, pinches, or don't know. Only where it pinches do you ask further. You hold the pen, the physician holds the cards.",
     m1_what:"What pinches here?", m1_help:"What would help?",
+    sort_loopt:"Runs", sort_knelt:"Pinches", sort_weet:"Don't know",
+    route_k:"Implementation route · optional", route_lead:"Add a route card: you see which steps of the path that route leans on.",
+    route_none:"No route", leans:"leans on this", knelt_k:"Where it pinches — ask further",
+    sorted_hint:"Sort the cards; \u2018Pinches\u2019 opens the follow-up.",
     case_k:"The patient", case_h:"Your patient today",
     case_lead_doc:"A dealt case — a given, not a puzzle. Read the file as you would a real one. The facilitator opposite you will play [name] in a moment: anything you want to know, ask out loud.",
     case_lead_fac:"You will be this patient. Read the file and the hidden facts: give those away only when the physician asks openly.",
@@ -313,7 +344,7 @@ const T = {
     d_demo:"Demographics", d_med:"Medical picture", d_care:"Care use", d_life:"Lifestyle", d_prio:"What the patient values",
     d_flag:"Case facts · fictional · plausibility to be checked by Medical", d_reg:"Current regimen specifics: [ViiV — pending]",
     hidden_k:"Hidden facts — only if asked", cue:"Surfaces when asked about:",
-    m1_steps:["Capacity","Scheduling","Logistics","Funding","Follow-up","Finish"],
+    m1_steps:["Treatment path","Finish"],
     m2_steps:["Patient","Opening","Explore","Approach","Twist","Does it hold?"],
     say_k:"What you actually say", why_k:"Why this way",
     rules:"This is not a test and not a pitch. There is no right answer. We only look at where things pinch in practice.",
@@ -330,12 +361,8 @@ const T = {
     practice_lead:"From the scan: this is where this practice pinches. Not a verdict on any option — a given the patient can weigh. Is this a hurdle for this patient, or not?",
     practice_means:"For the conversation",
     m1_say:[
-      {say:"I'm curious how it runs with you — not how it should. If we walk the treatment path: who does what, and where does it get tight?", why:"You open as a listener. The physician is the expert on their practice; you bring no answer."},
-      {say:"Suppose a treatment needed tighter appointment windows — how would that fit your diary? And what happens today when someone misses one?", why:"Hypotheticals take the charge out. You're testing a practice, not a person."},
-      {say:"Refrigeration, stock, pharmacy, home delivery — where would the chain jam first with you?", why:"Concrete and operational. This is where barriers surface that no leaflet mentions."},
-      {say:"Who would have to carry the extra visits and the administration — and is there a route that's realistic for you?", why:"Funding is often the real pinch. Ask what's workable, not what's desirable."},
-      {say:"If someone doesn't respond or stops coming — who notices, and who calls?", why:"Follow-up is the barrier that's least visible and most decisive."},
-      {say:"Thank you. What I've noted is what pinches and what would help — is that right? This goes to our team to see where we can support.", why:"You close honestly with what happens to the insights. It makes the next visit easier."}
+      {say:"I'm laying down five cards — that's the treatment path, from capacity to follow-up. Would you sort them yourself: what runs, what pinches, and where you don't know? There's no right answer.", why:"The physician sorts with their hands; you ask. That makes them the expert and you the listener — not the interviewer."},
+      {say:"Thank you. What I've noted is where it pinches and what would help — and where it runs well for you. Is that right? This goes to our team to see where we can support.", why:"You close honestly with what happens to the insights. Where it does run is just as valuable: we can share that with centres where it pinches."}
     ],
     m2_say:[
       {say:"I'm giving you a patient. Not a puzzle to solve — just someone sitting in your consulting room today. Take a moment with the file.", why:"'Given, not a puzzle' stops the physician identifying the patient instead of having the conversation."},
@@ -415,24 +442,39 @@ const TWISTS = [
 ];
 
 const SCAN = [
-  {k:"cap", t:{nl:"Capaciteit & personeel", en:"Capacity & staffing"},
+  {k:"cap", sym:"grid", say:{nl:"Wie doet wat hier — en waar wordt het krap?", en:"Who does what here — and where does it get tight?"}, why:{nl:"Je opent als luisteraar; de arts is de expert over de eigen praktijk.", en:"You open as a listener; the physician is the expert on their practice."},
+   t:{nl:"Capaciteit & personeel", en:"Capacity & staffing"},
    s:{nl:"Wie doet wat in het behandelpad? Is er verpleegkundige capaciteit, ruimte en tijd voor extra contactmomenten?", en:"Who does what along the path? Is there nursing capacity, space and time for additional contact moments?"},
    m:{nl:"Elke aanpak die extra contactmomenten in de kliniek vraagt, hangt hiervan af.", en:"Any approach that needs extra clinic contact moments depends on this."}},
-  {k:"sch", t:{nl:"Planning & venster", en:"Scheduling & window"},
+  {k:"sch", sym:"clock", say:{nl:"Stel dat een behandeling strakkere afspraakvensters vraagt — hoe past dat in jullie agenda? En wat gebeurt er nu als iemand een afspraak mist?", en:"Suppose a treatment needed tighter appointment windows — how would that fit your diary? And what happens today when someone misses one?"}, why:{nl:"Hypothetisch vragen haalt de lading eraf. Je toetst een praktijk, geen persoon.", en:"Hypotheticals take the charge out. You're testing a practice, not a person."},
+   t:{nl:"Planning & venster", en:"Scheduling & window"},
    s:{nl:"Hoe zouden strakkere afspraakvensters passen in de huidige planning? Wat gebeurt er bij een gemiste afspraak?", en:"How would tighter appointment windows fit current scheduling? What happens on a missed appointment?"},
    m:{nl:"Een aanpak met een strak afspraakvenster vraagt hier meer van de planning — en van de patiënt.", en:"An approach with a tight appointment window asks more of scheduling here — and of the patient."}},
-  {k:"log", t:{nl:"Logistiek & opslag", en:"Logistics & storage"},
+  {k:"log", sym:"box", say:{nl:"Koeling, voorraad, apotheek, bezorging aan huis — waar zou de keten bij jullie als eerste vastlopen?", en:"Refrigeration, stock, pharmacy, home delivery — where would the chain jam first with you?"}, why:{nl:"Concreet en operationeel. Hier komen barrières boven die in geen enkele folder staan.", en:"Concrete and operational. This is where barriers surface that no leaflet mentions."},
+   t:{nl:"Logistiek & opslag", en:"Logistics & storage"},
    s:{nl:"Koeling, voorraad, apotheek, thuisbezorging — waar loopt de keten vast?", en:"Refrigeration, stock, pharmacy, home delivery — where does the chain jam?"},
    m:{nl:"Een aanpak die koeling of aparte logistiek vraagt, loopt hier tegen de keten aan.", en:"An approach that needs refrigeration or separate logistics runs into the chain here."}},
-  {k:"fin", t:{nl:"Financiering & VoReZorg", en:"Funding & VoReZorg"},
+  {k:"fin", sym:"circle", say:{nl:"Wie zou de extra bezoeken en de toediening moeten dragen — en is er een route die bij jullie realistisch is?", en:"Who would have to carry the extra visits and the administration — and is there a route that's realistic for you?"}, why:{nl:"Financiering is vaak het echte knelpunt. Vraag naar haalbaar, niet naar wenselijk.", en:"Funding is often the real pinch. Ask what's workable, not what's desirable."},
+   t:{nl:"Financiering & VoReZorg", en:"Funding & VoReZorg"},
    s:{nl:"Wie draagt de kosten van extra bezoeken, toediening en thuiszorg? Welke route is haalbaar in deze praktijk?", en:"Who carries the cost of extra visits, administration and home care? Which route is workable in this practice?"},
    m:{nl:"Zonder haalbare financieringsroute is een aanpak hier op papier beschikbaar, in de praktijk niet vanzelfsprekend.", en:"Without a workable funding route an approach is available on paper here, not self-evidently in practice."}},
-  {k:"fup", t:{nl:"Opvolging", en:"Follow-up"},
+  {k:"fup", sym:"loop", say:{nl:"Als iemand niet reageert of wegblijft — wie merkt dat, en wie belt?", en:"If someone doesn't respond or stops coming — who notices, and who calls?"}, why:{nl:"Opvolging is de barrière die het minst zichtbaar is en het meest bepaalt.", en:"Follow-up is the barrier that's least visible and most decisive."},
+   t:{nl:"Opvolging", en:"Follow-up"},
    s:{nl:"Hoe worden patiënten opgevolgd die niet reageren of afspraken missen? Wie belt, wie bewaakt?", en:"How are non-responding or no-show patients followed up? Who calls, who monitors?"},
    m:{nl:"Een aanpak die strikte opvolging vraagt, leunt op wie hier belt en bewaakt.", en:"An approach that needs strict follow-up leans on who calls and monitors here."}}
 ];
 
+/* Implementation-route cards (organisational, neutral). leans = path steps the route depends on */
+const ROUTES = [
+  {k:"clinic", n:{nl:"In de kliniek", en:"In the clinic"}, d:{nl:"Toediening en controle op de poli.", en:"Administration and review at the outpatient clinic."}, leans:["cap","sch"]},
+  {k:"home",   n:{nl:"Thuiszorg / externe partij", en:"Home care / external party"}, d:{nl:"Toediening thuis via wijkzorg of een externe dienst.", en:"Administration at home via district nursing or an external service."}, leans:["log","fin","fup"]},
+  {k:"pharm",  n:{nl:"Apotheek", en:"Pharmacy"}, d:{nl:"Uitgifte en/of toediening via de (stads)apotheek.", en:"Dispensing and/or administration via a (city) pharmacy."}, leans:["log","fup"]}
+];
+
 const SYM = {
+  clock:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="13" r="9"/><path d="M13 8 V13 L16.5 15"/></svg>',
+  box:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9 L13 5 L21 9 L21 18 L13 22 L5 18 Z M5 9 L13 13 L21 9 M13 13 V22"/></svg>',
+  loop:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13 A7 7 0 1 1 17.5 7.7"/><path d="M17.5 4.5 L17.5 8 L21 8"/></svg>',
   circle:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="13" r="9"/></svg>',
   triangle:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4 L22 21 L4 21 Z"/></svg>',
   cross:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6 L20 20 M20 6 L6 20"/></svg>',
@@ -448,7 +490,7 @@ const F = x => String(x).replace(/\[naam\]|\[name\]/g, S.profile ? S.profile.nam
 function setLang(l){ S.lang=l; document.documentElement.lang=l; render(); }
 function setRole(r){ S.role=r; render(); }
 function start(mode){
-  S.mode=mode; S.i=0; S.revealed=[]; S.caps={};
+  S.mode=mode; S.i=0; S.revealed=[]; S.caps={}; S.sort={}; S.route=null;
   if(mode==="m2"){
     S.profile = PROFILES[Math.floor(Math.random()*PROFILES.length)];
     S.twist   = TWISTS[Math.floor(Math.random()*TWISTS.length)];
@@ -497,25 +539,51 @@ function startScreen(){
 
 /* ---- Mode 1: treatment-path scan ---- */
 function mode1(){
-  const total = SCAN.length+1;
-  if(S.i === SCAN.length){
-    return `<div class="kicker">${t("step")} ${S.i+1} / ${total}</div><h2>${t("finish")}</h2><p class="lead">${t("log_lead")}</p>${script("m1")}${nav()}`;
+  const total=t("m1_steps").length;
+  if(S.i===1){
+    return `<div class="kicker">${t("step")} 2 / ${total}</div><h2>${t("finish")}</h2><p class="lead">${t("log_lead")}</p>${script("m1")}${nav()}`;
   }
-  const p = SCAN[S.i], w = S.caps[p.k+"_w"]||"", h = S.caps[p.k+"_h"]||"";
+  const route = ROUTES.find(r=>r.k===S.route);
+  const leans = route ? route.leans : [];
+  const knelt = SCAN.filter(p=>S.sort[p.k]==="knelt");
   return `
-    <div class="kicker">${t("step")} ${S.i+1} / ${total}</div>
+    <div class="kicker">${t("step")} 1 / ${total}</div>
     <h2>${t("m1_h")}</h2>
     <p class="lead">${t("m1_lead")}</p>
-    <div class="bprompt">
-      <p class="t">${L(p.t)}</p><p class="s">${L(p.s)}</p>
-      <div class="two">
-        <div><label>${t("m1_what")}</label><textarea id="w">${esc(w)}</textarea></div>
-        <div><label>${t("m1_help")}</label><textarea id="h">${esc(h)}</textarea></div>
-      </div>
-    </div>
     ${script("m1")}
+    <div class="kicker">${t("route_k")}</div>
+    <p class="hint" style="margin-bottom:8px">${t("route_lead")}</p>
+    <div class="routes">
+      <button class="rchip ${!S.route?'on':''}" onclick="setRoute(null)">${t("route_none")}</button>
+      ${ROUTES.map(r=>`<button class="rchip ${S.route===r.k?'on':''}" onclick="setRoute('${r.k}')" title="${esc(L(r.d))}">${L(r.n)}</button>`).join("")}
+    </div>
+    <div class="path">
+      ${SCAN.map(p=>{ const st=S.sort[p.k]||""; return `
+        <div class="pcard ${st}">
+          <div class="tab"></div>${SYM[p.sym]}
+          <div class="pt">${L(p.t)}</div>
+          <div class="ps">${L(p.s)}</div>
+          ${leans.includes(p.k)?`<span class="lean">${t("leans")}</span>`:""}
+          <div class="sort">
+            ${["loopt","knelt","weet"].map(v=>`<button class="${st===v?'on':''}" onclick="setSort('${p.k}','${v}')">${t("sort_"+v)}</button>`).join("")}
+          </div>
+        </div>`; }).join("")}
+    </div>
+    <p class="hint">${t("sorted_hint")}</p>
+    ${knelt.length?`<div class="kicker">${t("knelt_k")}</div>`:""}
+    ${knelt.map(p=>`
+      <div class="kpanel">
+        <div class="kt">${SYM[p.sym]}${L(p.t)}</div>
+        <div class="say"><div class="ck">${t("say_k")}</div><p class="line">\u201c${L(p.say)}\u201d</p><div class="why"><b>${t("why_k")}:</b> ${L(p.why)}</div></div>
+        <div class="two" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div><label style="font-size:11.5px;color:var(--muted);display:block;margin-bottom:4px;font-weight:500">${t("m1_what")}</label><textarea id="w_${p.k}" style="min-height:70px">${esc(S.caps[p.k+"_w"]||"")}</textarea></div>
+          <div><label style="font-size:11.5px;color:var(--muted);display:block;margin-bottom:4px;font-weight:500">${t("m1_help")}</label><textarea id="h_${p.k}" style="min-height:70px">${esc(S.caps[p.k+"_h"]||"")}</textarea></div>
+        </div>
+      </div>`).join("")}
     ${nav()}`;
 }
+function setSort(k,v){ collect(); S.sort[k] = (S.sort[k]===v) ? "" : v; render(); }
+function setRoute(r){ collect(); S.route=r; render(); }
 
 /* ---- Mode 2: patient case ---- */
 function mode2(){
@@ -601,13 +669,13 @@ function script(mode){
 /* Bridge: practice-level barriers from the most recent scan this session */
 function practiceProfile(){
   const r = S.log.find(x=>x.mode==="m1"); if(!r) return null;
-  const items = r.items.filter(it=>it.key && it.w); return items.length?items:null;
+  const items = r.items.filter(it=>it.key && it.st==="knelt"); return items.length?items:null;
 }
 function practicePanel(){
   const pp = practiceProfile();
   if(!pp) return `<div class="practice none">${t("practice_none")}</div>`;
   return `<div class="practice"><div class="ck">${t("practice_k")}</div><p class="lead2">${t("practice_lead")}</p>
-    ${pp.map(it=>{ const sc=SCAN.find(x=>x.k===it.key); return `<div class="pin"><b>${L(sc.t)}</b><div>${esc(it.w)}<div class="mn">${t("practice_means")}: ${L(sc.m)}</div></div></div>`; }).join("")}</div>`;
+    ${pp.map(it=>{ const sc=SCAN.find(x=>x.k===it.key); return `<div class="pin"><b>${L(sc.t)}</b><div>${esc(it.w||"\u2014")}<div class="mn">${t("practice_means")}: ${L(sc.m)}</div></div></div>`; }).join("")}</div>`;
 }
 function shuffleProfile(){
   const idx=(PROFILES.indexOf(S.profile)+1)%PROFILES.length;
@@ -618,7 +686,7 @@ function otherTwist(){
 }
 
 function nav(){
-  const total = S.mode==="m1" ? SCAN.length+1 : t("m2_steps").length;
+  const total = S.mode==="m1" ? t("m1_steps").length : t("m2_steps").length;
   const last = S.i===total-1;
   return `<div class="actions">
     ${S.i>0?`<button onclick="back()">${t("back")}</button>`:""}
@@ -628,11 +696,13 @@ function nav(){
 
 /* ---- flow ---- */
 const val  = id => (document.getElementById(id)||{value:""}).value.trim();
+const stLbl = st => st ? t("sort_"+st) : "";
 const show = el => { if(el) el.style.display="block"; };
 function collect(){
   const err=document.getElementById("err");
   if(S.mode==="m1"){
-    if(S.i<SCAN.length){ const p=SCAN[S.i]; S.caps[p.k+"_w"]=val("w"); S.caps[p.k+"_h"]=val("h"); }
+    if(S.i===0) SCAN.forEach(p=>{ if(S.sort[p.k]==="knelt"){ const w=document.getElementById("w_"+p.k), h=document.getElementById("h_"+p.k);
+      if(w) S.caps[p.k+"_w"]=w.value.trim(); if(h) S.caps[p.k+"_h"]=h.value.trim(); } });
     return true;
   }
   const doc=S.role==="doc";
@@ -644,7 +714,7 @@ function collect(){
 }
 function next(){
   if(!collect()) return;
-  const total = S.mode==="m1" ? SCAN.length+1 : t("m2_steps").length;
+  const total = S.mode==="m1" ? t("m1_steps").length : t("m2_steps").length;
   if(S.i<total-1){ S.i++; render(); } else finish();
 }
 function back(){ collect(); S.i--; render(); }
@@ -652,8 +722,11 @@ function back(){ collect(); S.i--; render(); }
 function finish(){
   const e = {mode:S.mode, items:[]};
   if(S.mode==="m1"){
-    e.title = t("m1_name");
-    SCAN.forEach(p=>{ const w=S.caps[p.k+"_w"], h=S.caps[p.k+"_h"]; if(w||h) e.items.push({key:p.k, k:L(p.t), w, h}); });
+    const route = ROUTES.find(r=>r.k===S.route);
+    e.title = t("m1_name") + (route ? " · " + L(route.n) : "");
+    SCAN.forEach(p=>{ const st=S.sort[p.k]||""; if(!st) return;
+      const w=st==="knelt"?(S.caps[p.k+"_w"]||""):"", h=st==="knelt"?(S.caps[p.k+"_h"]||""):"";
+      e.items.push({key:p.k, k:L(p.t), st, w, h}); });
   } else {
     e.title = `${t("m2_name")} · ${S.profile.name}`;
     e.twist = L(S.twist);
@@ -667,7 +740,7 @@ function logScreen(){
   const n=S.log.length;
   const body = S.log.map((r,idx)=>`<div class="entry">
       <div class="q">${t("round")} ${n-idx} · ${r.title}</div>
-      ${r.items.map(it=>`<div><strong>${it.k}:</strong> ${esc(it.w||"")}${it.h?` <span class="muted">→ ${esc(it.h)}</span>`:""}</div>`).join("")}
+      ${r.items.map(it=>`<div><strong>${it.k}:</strong> ${it.st?`<em>${stLbl(it.st)}</em>${it.w?" — ":""}`:""}${esc(it.w||"")}${it.h?` <span class="muted">→ ${esc(it.h)}</span>`:""}</div>`).join("")}
       ${r.surfaced&&r.surfaced.length?`<div class="q" style="margin-top:6px">${t("surfaced_lbl")}: ${r.surfaced.map(esc).join(" · ")}</div>`:""}
       ${r.twist?`<div class="q">${t("twist_lbl")}: ${esc(r.twist)}</div>`:""}
     </div>`).join("");
@@ -682,7 +755,7 @@ function logScreen(){
 function copyLog(b){
   const n=S.log.length;
   const txt=S.log.map((r,idx)=>`${t("round")} ${n-idx} — ${r.title}\n`+
-    r.items.map(it=>`  ${it.k}: ${it.w||""}${it.h?`  → ${it.h}`:""}`).join("\n")+
+    r.items.map(it=>`  ${it.k}: ${it.st?stLbl(it.st)+(it.w?" — ":""):""}${it.w||""}${it.h?`  → ${it.h}`:""}`).join("\n")+
     (r.surfaced&&r.surfaced.length?`\n  ${t("surfaced_lbl")}: ${r.surfaced.join(" · ")}`:"")+
     (r.twist?`\n  ${t("twist_lbl")}: ${r.twist}`:"")).join("\n\n");
   navigator.clipboard.writeText(txt).then(()=>{ const o=b.textContent; b.textContent=t("copied"); setTimeout(()=>b.textContent=o,1400); });
