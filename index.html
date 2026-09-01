@@ -105,6 +105,27 @@
   .entry .q{color:var(--muted);font-size:12px;margin-bottom:3px}
   .revealed{border:1px solid var(--soft);padding:10px 12px;margin-top:10px;font-size:13.5px;background:var(--wash)}
   .revealed .ck{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .card.double{border:3px double var(--ink)}
+  /* AM voice-over */
+  .say{border:1px solid var(--ink);background:var(--wash);padding:14px 16px;margin:0 0 18px;max-width:64ch}
+  .say .ck{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .say .line{font-family:var(--display);font-size:18px;line-height:1.35;margin:0 0 8px}
+  .say .why{font-size:12.5px;color:#333;border-top:1px dashed var(--soft);padding-top:8px}
+  .say .why b{font-weight:500;color:var(--muted)}
+  /* bridge panel */
+  .practice{border:1px solid var(--ink);padding:14px 16px;margin:0 0 18px;max-width:64ch}
+  .practice .ck{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .practice .lead2{font-size:13.5px;margin:0 0 10px}
+  .practice .pin{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:6px 0;border-top:1px solid var(--soft);font-size:13.5px}
+  .practice .pin b{font-weight:500}
+  .practice .pin .mn{color:var(--muted);font-size:12.5px;margin-top:2px}
+  .practice.none{border-style:dashed;color:var(--muted);font-size:13px}
+  .how{max-width:64ch;margin:18px 0 0}
+  .how summary{cursor:pointer;font-size:13px;padding:8px 0;border-top:1px solid var(--soft);border-bottom:1px solid var(--soft)}
+  .how ol{margin:10px 0 0;padding-left:20px;font-size:14px}
+  .how li{margin:0 0 6px}
+  .rules{font-family:var(--display);font-size:17px;line-height:1.35;border-left:2px solid var(--ink);padding-left:14px;margin:0 0 20px;max-width:60ch}
+  .onflag{font-size:12px;border:1px solid var(--ink);display:inline-block;padding:3px 8px;margin:0 0 14px}
 </style>
 </head>
 <body>
@@ -173,7 +194,37 @@ const T = {
     d_flag:"Casusfeiten · fictief · plausibiliteit te toetsen door Medical", d_reg:"Specificatie huidige middel: [ViiV — in afwachting]",
     hidden_k:"Verborgen feiten — alleen als gevraagd", cue:"Komt los bij:",
     m1_steps:["Capaciteit","Planning","Logistiek","Financiering","Opvolging","Afronden"],
-    m2_steps:["Patiënt","Openen","Verkennen","Aanpak","Twist","Houdt het stand?"]
+    m2_steps:["Patiënt","Openen","Verkennen","Aanpak","Twist","Houdt het stand?"],
+    say_k:"Wat je letterlijk zegt", why_k:"Waarom zo",
+    rules:"Dit is geen test en geen pitch. Er is geen goed antwoord. We kijken alleen waar het in de praktijk knelt.",
+    how_k:"Hoe een sessie loopt",
+    how:[
+      "Jij bent facilitator. De arts blijft de arts — altijd. Je legt niets uit over SDM; je geeft een gesprek om in te oefenen.",
+      "Behandelpad-scan: geen patiënt. De arts vertelt hoe het in de eigen praktijk loopt; jij noteert wat knelt en wat zou helpen.",
+      "Patiëntcasus: jij wordt de patiënt en vertelt alleen wat de arts vraagt. Verborgen feiten komen pas los bij een open vraag naar het leven.",
+      "Doe je eerst de scan en dan een casus, dan weegt de praktijkcontext mee bij de aanpak — dat is de brug tussen de twee."
+    ],
+    shuffle:"Andere patiënt", other_twist:"Andere twist",
+    practice_k:"Deze praktijk", practice_on:"Praktijkcontext actief uit de behandelpad-scan",
+    practice_none:"Nog geen behandelpad-scan deze sessie — de aanpak wordt zonder praktijkcontext gewogen. Speel eerst de scan om de brug te zien.",
+    practice_lead:"Uit de scan: hier knelt het in deze praktijk. Geen verdict over een optie — een gegeven dat de patiënt mee kan wegen. Is dit voor déze patiënt een drempel, of niet?",
+    practice_means:"Voor het gesprek",
+    m1_say:[
+      {say:"Ik ben benieuwd hoe het bij jullie loopt — niet hoe het zou moeten. Als we het behandelpad langslopen: wie doet wat, en waar wordt het krap?", why:"Je opent als luisteraar. De arts is de expert over de eigen praktijk; jij hebt geen antwoord bij je."},
+      {say:"Stel dat een behandeling strakkere afspraakvensters vraagt — hoe past dat in jullie agenda? En wat gebeurt er nu als iemand een afspraak mist?", why:"Hypothetisch vragen haalt de lading eraf. Je toetst een praktijk, geen persoon."},
+      {say:"Koeling, voorraad, apotheek, bezorging aan huis — waar zou de keten bij jullie als eerste vastlopen?", why:"Concreet en operationeel. Hier komen barrières boven die in geen enkele folder staan."},
+      {say:"Wie zou de extra bezoeken en de toediening moeten dragen — en is er een route die bij jullie realistisch is?", why:"Financiering is vaak het echte knelpunt. Vraag naar haalbaar, niet naar wenselijk."},
+      {say:"Als iemand niet reageert of wegblijft — wie merkt dat, en wie belt?", why:"Opvolging is de barrière die het minst zichtbaar is en het meest bepaalt."},
+      {say:"Dank je. Wat ik heb genoteerd is wat knelt en wat zou helpen — klopt dat zo? Dit gaat naar ons team om te kijken waar wij kunnen ondersteunen.", why:"Je sluit eerlijk af met wat er met de inzichten gebeurt. Dat maakt de volgende keer makkelijker."}
+    ],
+    m2_say:[
+      {say:"Ik geef je een patiënt. Geen puzzel om op te lossen — gewoon iemand die vandaag in je spreekkamer zit. Neem even de tijd voor het dossier.", why:"'Gegeven, geen puzzel' voorkomt dat de arts de patiënt gaat identificeren in plaats van het gesprek te voeren."},
+      {say:"Ik ben even [naam]. Begin maar zoals je dat normaal zou doen.", why:"Je stapt in de rol en zegt niets over hóe. De arts oefent de eigen manier, niet die van jou."},
+      {say:"Ik reageer als [naam]. Ik vertel alleen wat je me vraagt.", why:"De spelregel hardop. Verborgen feiten komen alleen los bij een open vraag naar het leven — dat is de oefening, geen les."},
+      {say:"Even uit de rol. Als je nu zou kiezen hoe je verdergaat — wat doe je? Er is geen goed antwoord.", why:"Commitment vóór de twist. 'Geen goed antwoord' houdt het neutraal en haalt de prestatiedruk weg."},
+      {say:"Terug in de rol. [Lees de twist voor als [naam].]", why:"De twist komt uit de mond van de patiënt, niet van jou. Zo blijft het een gesprek, geen toets."},
+      {say:"Uit de rol. Houdt je aanpak dit? En als het wringt — waar zit dat in jullie praktijk?", why:"Je zet reflectie om in een barrière zonder te oordelen. Dít is wat je vastlegt."}
+    ]
   },
   en:{
     tag:"Neutral SDM & barrier instrument · playable prototype",
@@ -225,7 +276,37 @@ const T = {
     d_flag:"Case facts · fictional · plausibility to be checked by Medical", d_reg:"Current regimen specifics: [ViiV — pending]",
     hidden_k:"Hidden facts — only if asked", cue:"Surfaces when asked about:",
     m1_steps:["Capacity","Scheduling","Logistics","Funding","Follow-up","Finish"],
-    m2_steps:["Patient","Opening","Explore","Approach","Twist","Does it hold?"]
+    m2_steps:["Patient","Opening","Explore","Approach","Twist","Does it hold?"],
+    say_k:"What you actually say", why_k:"Why this way",
+    rules:"This is not a test and not a pitch. There is no right answer. We only look at where things pinch in practice.",
+    how_k:"How a session runs",
+    how:[
+      "You are the facilitator. The physician stays the physician — always. You explain nothing about SDM; you offer a conversation to practise in.",
+      "Treatment-path scan: no patient. The physician describes how their own practice runs; you note what pinches and what would help.",
+      "Patient case: you become the patient and only tell what the physician asks. Hidden facts surface only on an open question about life.",
+      "Play the scan first and then a case, and the practice context weighs into the approach — that is the bridge between the two."
+    ],
+    shuffle:"Another patient", other_twist:"Another twist",
+    practice_k:"This practice", practice_on:"Practice context active from the treatment-path scan",
+    practice_none:"No treatment-path scan yet this session — the approach is weighed without practice context. Play the scan first to see the bridge.",
+    practice_lead:"From the scan: this is where this practice pinches. Not a verdict on any option — a given the patient can weigh. Is this a hurdle for this patient, or not?",
+    practice_means:"For the conversation",
+    m1_say:[
+      {say:"I'm curious how it runs with you — not how it should. If we walk the treatment path: who does what, and where does it get tight?", why:"You open as a listener. The physician is the expert on their practice; you bring no answer."},
+      {say:"Suppose a treatment needed tighter appointment windows — how would that fit your diary? And what happens today when someone misses one?", why:"Hypotheticals take the charge out. You're testing a practice, not a person."},
+      {say:"Refrigeration, stock, pharmacy, home delivery — where would the chain jam first with you?", why:"Concrete and operational. This is where barriers surface that no leaflet mentions."},
+      {say:"Who would have to carry the extra visits and the administration — and is there a route that's realistic for you?", why:"Funding is often the real pinch. Ask what's workable, not what's desirable."},
+      {say:"If someone doesn't respond or stops coming — who notices, and who calls?", why:"Follow-up is the barrier that's least visible and most decisive."},
+      {say:"Thank you. What I've noted is what pinches and what would help — is that right? This goes to our team to see where we can support.", why:"You close honestly with what happens to the insights. It makes the next visit easier."}
+    ],
+    m2_say:[
+      {say:"I'm giving you a patient. Not a puzzle to solve — just someone sitting in your consulting room today. Take a moment with the file.", why:"'Given, not a puzzle' stops the physician identifying the patient instead of having the conversation."},
+      {say:"I'll be [name] for a moment. Start the way you normally would.", why:"You step into the role and say nothing about how. The physician practises their own way, not yours."},
+      {say:"I'll respond as [name]. I only tell you what you ask me.", why:"The rule of the game, out loud. Hidden facts surface only on an open question about life — that is the exercise, not a lesson."},
+      {say:"Out of role for a moment. If you had to choose how to go on now — what do you do? There's no right answer.", why:"Commitment before the twist. 'No right answer' keeps it neutral and takes the performance pressure off."},
+      {say:"Back in role. [Read the twist out as [name].]", why:"The twist comes from the patient's mouth, not yours. It stays a conversation, not a test."},
+      {say:"Out of role. Does your approach hold this? And if it grinds — where is that in your practice?", why:"You turn reflection into a barrier without judging. This is what you capture."}
+    ]
   }
 };
 
@@ -266,6 +347,24 @@ const PROFILES = [
      {nl:"Heeft angst voor naalden.", en:"Is afraid of needles.", cue:{nl:"eerdere ervaringen / wat ze niet wil", en:"past experiences / what she doesn't want"}},
      {nl:"Voelt zich soms \u201calleen maar patiënt\u201d.", en:"Sometimes feels like \u201cnothing but a patient\u201d.", cue:{nl:"hoe ze zich voelt", en:"how she feels"}}
    ]
+ },
+ { id:"adrian", tab:"left", style:"double", sym:"cross", name:"Adrian",
+   meta:{nl:"26 · man · starter, woont met huisgenoten", en:"26 · male · early career, lives with flatmates"},
+   demo:{nl:[["Leeftijd","26"],["Woont","met twee huisgenoten; verhuist vaak"],["Werk","eerste baan, onregelmatige uren"],["Afstand centrum","± 25 min"]],
+         en:[["Age","26"],["Lives","with two flatmates; moves often"],["Work","first job, irregular hours"],["Distance to clinic","± 25 min"]]},
+   med:{nl:[["Diagnose","2025"],["Huidig","dagelijkse orale combinatietablet"],["Onderdrukt sinds","2025"],["BMI","22"],["Genotype","bekend"],["Comorbiditeit","geen"],["Overige medicatie","geen"]],
+        en:[["Diagnosis","2025"],["Current","daily oral single-tablet regimen"],["Suppressed since","2025"],["BMI","22"],["Genotype","known"],["Comorbidity","none"],["Other medication","none"]]},
+   care:{nl:[["Afspraaktrouw","wisselend; 2 gemiste afspraken afgelopen jaar"],["Bezoekfrequentie","onregelmatig"]],
+         en:[["Appointment reliability","variable; 2 missed appointments last year"],["Visit frequency","irregular"]]},
+   life:{nl:[["Ritme","onregelmatig, laat naar bed"],["Sociaal","veel uit, nieuwe stad"],["Reizen","weekends weg"]],
+         en:[["Rhythm","irregular, late nights"],["Social","out a lot, new city"],["Travel","weekends away"]]},
+   prio:{nl:"Wil dat niemand het weet. Wil zo min mogelijk aan de diagnose herinnerd worden.",
+         en:"Wants no one to know. Wants to be reminded of the diagnosis as little as possible."},
+   hidden:[
+     {nl:"Heeft het nog aan niemand verteld — ook niet aan huisgenoten of familie.", en:"Hasn't told anyone yet — not flatmates, not family.", cue:{nl:"thuis / wie het weet", en:"home / who knows"}},
+     {nl:"Haalt medicatie liever niet op bij de apotheek om de hoek; bang gezien te worden.", en:"Prefers not to collect medication at the local pharmacy; afraid of being seen.", cue:{nl:"apotheek / dagelijkse routine", en:"pharmacy / daily routine"}},
+     {nl:"Miste afspraken omdat brieven naar een oud adres gingen.", en:"Missed appointments because letters went to an old address.", cue:{nl:"afspraken / bereikbaarheid", en:"appointments / reachability"}}
+   ]
  }
 ];
 
@@ -279,15 +378,20 @@ const TWISTS = [
 
 const SCAN = [
   {k:"cap", t:{nl:"Capaciteit & personeel", en:"Capacity & staffing"},
-   s:{nl:"Wie doet wat in het behandelpad? Is er verpleegkundige capaciteit, ruimte en tijd voor extra contactmomenten?", en:"Who does what along the path? Is there nursing capacity, space and time for additional contact moments?"}},
+   s:{nl:"Wie doet wat in het behandelpad? Is er verpleegkundige capaciteit, ruimte en tijd voor extra contactmomenten?", en:"Who does what along the path? Is there nursing capacity, space and time for additional contact moments?"},
+   m:{nl:"Elke aanpak die extra contactmomenten in de kliniek vraagt, hangt hiervan af.", en:"Any approach that needs extra clinic contact moments depends on this."}},
   {k:"sch", t:{nl:"Planning & venster", en:"Scheduling & window"},
-   s:{nl:"Hoe zouden strakkere afspraakvensters passen in de huidige planning? Wat gebeurt er bij een gemiste afspraak?", en:"How would tighter appointment windows fit current scheduling? What happens on a missed appointment?"}},
+   s:{nl:"Hoe zouden strakkere afspraakvensters passen in de huidige planning? Wat gebeurt er bij een gemiste afspraak?", en:"How would tighter appointment windows fit current scheduling? What happens on a missed appointment?"},
+   m:{nl:"Een aanpak met een strak afspraakvenster vraagt hier meer van de planning — en van de patiënt.", en:"An approach with a tight appointment window asks more of scheduling here — and of the patient."}},
   {k:"log", t:{nl:"Logistiek & opslag", en:"Logistics & storage"},
-   s:{nl:"Koeling, voorraad, apotheek, thuisbezorging — waar loopt de keten vast?", en:"Refrigeration, stock, pharmacy, home delivery — where does the chain jam?"}},
+   s:{nl:"Koeling, voorraad, apotheek, thuisbezorging — waar loopt de keten vast?", en:"Refrigeration, stock, pharmacy, home delivery — where does the chain jam?"},
+   m:{nl:"Een aanpak die koeling of aparte logistiek vraagt, loopt hier tegen de keten aan.", en:"An approach that needs refrigeration or separate logistics runs into the chain here."}},
   {k:"fin", t:{nl:"Financiering & VoReZorg", en:"Funding & VoReZorg"},
-   s:{nl:"Wie draagt de kosten van extra bezoeken, toediening en thuiszorg? Welke route is haalbaar in deze praktijk?", en:"Who carries the cost of extra visits, administration and home care? Which route is workable in this practice?"}},
+   s:{nl:"Wie draagt de kosten van extra bezoeken, toediening en thuiszorg? Welke route is haalbaar in deze praktijk?", en:"Who carries the cost of extra visits, administration and home care? Which route is workable in this practice?"},
+   m:{nl:"Zonder haalbare financieringsroute is een aanpak hier op papier beschikbaar, in de praktijk niet vanzelfsprekend.", en:"Without a workable funding route an approach is available on paper here, not self-evidently in practice."}},
   {k:"fup", t:{nl:"Opvolging", en:"Follow-up"},
-   s:{nl:"Hoe worden patiënten opgevolgd die niet reageren of afspraken missen? Wie belt, wie bewaakt?", en:"How are non-responding or no-show patients followed up? Who calls, who monitors?"}}
+   s:{nl:"Hoe worden patiënten opgevolgd die niet reageren of afspraken missen? Wie belt, wie bewaakt?", en:"How are non-responding or no-show patients followed up? Who calls, who monitors?"},
+   m:{nl:"Een aanpak die strikte opvolging vraagt, leunt op wie hier belt en bewaakt.", en:"An approach that needs strict follow-up leans on who calls and monitors here."}}
 ];
 
 const SYM = {
@@ -336,14 +440,18 @@ function render(){
 }
 
 function startScreen(){
+  const pp = practiceProfile();
   return `
     <div class="kicker">${t("start_k")}</div>
     <h2>${t("start_h")}</h2>
     <p class="lead">${t("start_lead")}</p>
+    <p class="rules">${t("rules")}</p>
+    ${pp?`<div class="onflag">${t("practice_on")}</div>`:""}
     <div class="modes">
       <button class="mode" onclick="start('m1')">${SYM.grid}<div class="name">${t("m1_name")}</div><div class="for">${t("m1_for")}</div><div class="desc">${t("m1_desc")}</div></button>
       <button class="mode dashed" onclick="start('m2')">${SYM.circle}<div class="name">${t("m2_name")}</div><div class="for">${t("m2_for")}</div><div class="desc">${t("m2_desc")}</div></button>
     </div>
+    <details class="how"><summary>${t("how_k")}</summary><ol>${t("how").map(x=>`<li>${x}</li>`).join("")}</ol></details>
     <p class="note">${t("start_note")}</p>`;
 }
 
@@ -351,7 +459,7 @@ function startScreen(){
 function mode1(){
   const total = SCAN.length+1;
   if(S.i === SCAN.length){
-    return `<div class="kicker">${t("step")} ${S.i+1} / ${total}</div><h2>${t("finish")}</h2><p class="lead">${t("log_lead")}</p>${nav()}`;
+    return `<div class="kicker">${t("step")} ${S.i+1} / ${total}</div><h2>${t("finish")}</h2><p class="lead">${t("log_lead")}</p>${script("m1")}${nav()}`;
   }
   const p = SCAN[S.i], w = S.caps[p.k+"_w"]||"", h = S.caps[p.k+"_h"]||"";
   return `
@@ -365,17 +473,21 @@ function mode1(){
         <div><label>${t("m1_help")}</label><textarea id="h">${esc(h)}</textarea></div>
       </div>
     </div>
+    ${script("m1")}
     ${nav()}`;
 }
 
 /* ---- Mode 2: patient case ---- */
 function mode2(){
   const P = S.profile, doc = S.role==="doc", n = t("m2_steps").length;
-  const head = (k,h) => `<div class="kicker">${t("step")} ${S.i+1} / ${n} · ${t(k)}</div><h2>${t(h)}</h2>`;
+  const head = (k,h) => `<div class="kicker">${t("step")} ${S.i+1} / ${n} · ${t(k)}</div><h2>${t(h)}</h2>` + (doc?"":script("m2"));
   if(S.i===0) return `
       ${head("case_k","case_h")}
       <p class="lead">${doc?t("case_lead_doc"):t("case_lead_fac")}</p>
-      <div class="cardwrap">${card(P)}<div>${dossier(P)}${doc?"":hiddenPanel(P,false)}</div></div>
+      <div class="cardwrap">
+        <div>${card(P)}<div class="actions" style="margin-top:10px"><button class="small" onclick="shuffleProfile()">${t("shuffle")}</button></div></div>
+        <div>${dossier(P)}${doc?"":hiddenPanel(P,false)}</div>
+      </div>
       ${nav()}`;
   if(S.i===1) return `
       ${head("open_k","open_h")}
@@ -390,14 +502,16 @@ function mode2(){
   if(S.i===3){ const opts=t("plan_opts"); return `
       ${head("plan_k","plan_h")}
       <p class="lead">${t("plan_lead")}</p>
+      ${practicePanel()}
       <div class="choices">${opts.map(o=>`<label><input type="radio" name="plan" value="${esc(o)}" ${S.caps.plan===o?'checked':''}> <span>${o}</span></label>`).join("")}</div>
       <div class="err" id="err">${t("need_choice")}</div>
       ${nav()}`; }
   if(S.i===4) return `
       ${head("twist_k","twist_h")}
       <p class="lead">${doc?t("twist_lead_doc"):t("twist_lead_fac")}</p>
-      <div class="cardwrap"><div class="card dashed"><div class="tab" style="right:18px"></div>${SYM.cross}
-        <div class="ck">Life-event</div><div class="body" style="font-family:var(--display);font-size:17px;line-height:1.35">${L(S.twist)}</div></div></div>
+      <div class="cardwrap"><div><div class="card dashed"><div class="tab" style="right:18px"></div>${SYM.cross}
+        <div class="ck">Life-event</div><div class="body" style="font-family:var(--display);font-size:17px;line-height:1.35">${L(S.twist)}</div></div>
+        ${doc?"":`<div class="actions" style="margin-top:10px"><button class="small" onclick="otherTwist()">${t("other_twist")}</button></div>`}</div></div>
       ${nav()}`;
   return `
       ${head("hold_k","hold_h")}
@@ -437,6 +551,32 @@ function surfacedPanel(P){
 }
 function revealFact(idx){ if(!S.revealed.includes(idx)) S.revealed.push(idx); render(); }
 
+/* AM voice-over: the literal line per step, plus why — the training layer */
+function script(mode){
+  const arr=t(mode+"_say"), e=arr[S.i]; if(!e) return "";
+  const nm = S.profile ? S.profile.name : "";
+  const fill = x => x.replace(/\[naam\]|\[name\]/g, nm);
+  return `<div class="say"><div class="ck">${t("say_k")}</div><p class="line">\u201c${fill(e.say)}\u201d</p><div class="why"><b>${t("why_k")}:</b> ${fill(e.why)}</div></div>`;
+}
+/* Bridge: practice-level barriers from the most recent scan this session */
+function practiceProfile(){
+  const r = S.log.find(x=>x.mode==="m1"); if(!r) return null;
+  const items = r.items.filter(it=>it.key && it.w); return items.length?items:null;
+}
+function practicePanel(){
+  const pp = practiceProfile();
+  if(!pp) return `<div class="practice none">${t("practice_none")}</div>`;
+  return `<div class="practice"><div class="ck">${t("practice_k")}</div><p class="lead2">${t("practice_lead")}</p>
+    ${pp.map(it=>{ const sc=SCAN.find(x=>x.k===it.key); return `<div class="pin"><b>${L(sc.t)}</b><div>${esc(it.w)}<div class="mn">${t("practice_means")}: ${L(sc.m)}</div></div></div>`; }).join("")}</div>`;
+}
+function shuffleProfile(){
+  const idx=(PROFILES.indexOf(S.profile)+1)%PROFILES.length;
+  S.profile=PROFILES[idx]; S.revealed=[]; render();
+}
+function otherTwist(){
+  const idx=(TWISTS.indexOf(S.twist)+1)%TWISTS.length; S.twist=TWISTS[idx]; render();
+}
+
 function nav(){
   const total = S.mode==="m1" ? SCAN.length+1 : t("m2_steps").length;
   const last = S.i===total-1;
@@ -473,7 +613,7 @@ function finish(){
   const e = {mode:S.mode, items:[]};
   if(S.mode==="m1"){
     e.title = t("m1_name");
-    SCAN.forEach(p=>{ const w=S.caps[p.k+"_w"], h=S.caps[p.k+"_h"]; if(w||h) e.items.push({k:L(p.t), w, h}); });
+    SCAN.forEach(p=>{ const w=S.caps[p.k+"_w"], h=S.caps[p.k+"_h"]; if(w||h) e.items.push({key:p.k, k:L(p.t), w, h}); });
   } else {
     e.title = `${t("m2_name")} · ${S.profile.name}`;
     e.twist = L(S.twist);

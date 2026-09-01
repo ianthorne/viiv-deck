@@ -83,7 +83,30 @@ openly about life (work rhythm, relationship, travel, how they feel). The facili
 reveals them on the right open question; unasked, they stay hidden — that IS the
 exercise. Revealed facts surface in the physician's view and are logged. Keep this.
 
-### 5. Bilingual (NL/EN) with a language switch
+### 5. AM voice-over (the training layer)
+Every step carries a **literal line the AM says out loud** plus a one-line *why*
+(`m1_say` / `m2_say` in the `T` dictionary, rendered by `script()`). In Mode 1 it is
+always shown (the AM is the only screen user); in Mode 2 it shows in the Facilitator
+view only, never to the physician. `[naam]`/`[name]` is substituted with the profile
+name. This is what trains AMs; keep lines neutral, non-teaching, in role where relevant.
+
+### 6. The bridge: treatment-path scan → patient case
+Barriers live at two levels. Mode 1 maps **practice-level** barriers (capacity, window,
+logistics, funding, follow-up — fixed for the practice). The profile carries
+**patient-level** barriers (appointment reliability, BMI, travel, needle fear). The SDM
+conversation is where they meet. If a scan was played this session, its pinch points
+appear at the case's **Approach** step (`practicePanel()`), each with a neutral
+"for the conversation" meaning (`SCAN[].m`). Framing is strict: a practice barrier is
+**an input the patient weighs, not a verdict on an option** — the prompt asks "is this
+a hurdle for THIS patient, or not?". Never let this become "so option X is unsuitable".
+The scan stores `key` per item so the bridge can map back to `SCAN`.
+
+### 7. Patient shuffle + three profiles
+"Andere patiënt" cycles deterministically through profiles (Gabriel, Karen, Adrian —
+three different barrier families: shift work/travel, carer/needle fear/2×yr, disclosure/
+reachability). Facilitator can also cycle the twist. Add profiles in the same shape.
+
+### 8. Bilingual (NL/EN) with a language switch
 UI strings live in the `T` dictionary; content fields are `{nl, en}` objects resolved
 by `L()`. Every new string/content item must have both. Dutch is the default (used in NL
 sessions). Card-FACE final content is English per project convention.
