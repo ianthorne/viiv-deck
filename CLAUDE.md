@@ -121,9 +121,24 @@ barriers + facilitators (centre-specific); comorbidity clinical bodies (ViiV-gat
 
 ## Build conventions
 
-- **Aesthetic: stark monochrome, ink-minimising.** No colour. Cards differentiate by
-  border style, line-art outline symbol and index-tab position. Display face: Century
-  Schoolbook stack (matches the deck's editorial identity); body: Helvetica/Arial.
+- **Two visual layers — keep them apart.**
+  *Physical cards* stay monochrome (no colour print): differentiation by border style
+  (solid / dashed / double), line-art outline symbol and index-tab position. On screen
+  they render navy-on-white with a sand tab; that is presentation, not a print promise.
+  *Screen chrome* applies the ViiV brand subtly (60/30/10): warm off-white page
+  (#FBF8F5), white panels, navy (#071D49) for all text/structure/borders, sand
+  (#D7A27E) for warmth (header divider, card tab, patient voice, voice-over block),
+  and Red Ribbon (#E40046) **only** as spotlight: primary CTA, selected toggle,
+  focus ring, chosen answer option. Never red as a surface or for errors (validation
+  hints are navy on sand-tint). Tokens live in `:root` as `--viiv-*`.
+- **Type:** Inter (Google Fonts link) with a humanist system fallback; headings
+  semibold navy, body regular, line-height ~1.6. Verify the licensed brand font with
+  ViiV/GSK if 1:1 matching is required.
+- **Icons:** simple line style, navy, rounded caps/joins. Radius 8–12px, light shadows.
+- **Logo:** never draw or fabricate it. `assets/viiv-logo.svg` is a slot for the
+  official red mark; the header hides it while the file is missing.
+- **Tone (copy):** direct, hopeful, inclusive, person-first. Avoid "hiv-patiënten" as a
+  category; "patiënt" is used only as the role in the consulting-room conversation.
 - Cards mirror print spec **85×120 mm** (aspect-ratio 85/120). 2×2 per A4.
 - **Stack:** vanilla static HTML/CSS/JS, single file, **no build step** — must serve as-is
   from GitHub Pages. `index.v1.html` is kept for reference only.
