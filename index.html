@@ -13,7 +13,7 @@
     --viiv-red:#E40046; --viiv-red-hover:#C4003C;
     --viiv-navy:#071D49; --viiv-sand:#D7A27E; --viiv-sand-tint:#F7EFE9;
     --viiv-bg:#FFFFFF; --viiv-bg-warm:#FBF8F5; --viiv-gray:#5B6472; --viiv-border:#E7E4E0;
-    --navy-soft:#9AA5BC;
+    --navy-soft:#9AA5BC; --border-strong:#5B6472;
     --ink:var(--viiv-navy); --paper:var(--viiv-bg); --muted:var(--viiv-gray); --soft:var(--viiv-border); --wash:var(--viiv-sand-tint);
     --r:10px; --r-sm:8px; --r-lg:12px;
     --shadow:0 1px 2px rgba(7,29,73,.05),0 6px 18px rgba(7,29,73,.06);
@@ -21,6 +21,10 @@
     --font:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   }
   *{box-sizing:border-box}
+  .skip{position:absolute;left:-9999px;top:0;background:var(--viiv-navy);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;z-index:10}
+  .skip:focus{left:0}
+  summary:focus-visible{outline:none;box-shadow:var(--focus);border-radius:6px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;transform:none!important}}
   html,body{margin:0;background:var(--viiv-bg-warm);color:var(--ink);font-family:var(--font);
     font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
   .wrap{max-width:960px;margin:0 auto;padding:32px 24px 90px}
@@ -32,13 +36,13 @@
   .homelink{text-decoration:none;color:inherit;border-radius:8px}
   .homelink:hover .brand{text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--viiv-sand)}
   .homelink:focus-visible{outline:none;box-shadow:var(--focus)}
-  .backchip{display:none;font-size:12px;font-weight:500;padding:5px 11px;border:1px solid var(--navy-soft);border-radius:999px;background:var(--paper);color:var(--ink)}
+  .backchip{display:none;font-size:12px;font-weight:500;padding:5px 11px;min-height:32px;border:1px solid var(--border-strong);border-radius:999px;background:var(--paper);color:var(--ink)}
   .backchip.show{display:inline-block}
   .logo{height:22px;width:auto;display:block}
   .brand{font-size:19px;font-weight:600;line-height:1.15;margin:0;letter-spacing:-.01em}
   .brand small{display:block;font-size:12px;font-weight:400;color:var(--muted);margin-top:3px}
   .ctl{display:flex;gap:12px;align-items:center;font-size:12px}
-  .seg-toggle{display:inline-flex;border:1px solid var(--soft);border-radius:999px;background:var(--paper);padding:2px}
+  .seg-toggle{display:inline-flex;border:1px solid var(--border-strong);border-radius:999px;background:var(--paper);padding:2px}
   .seg-toggle button{border:none;padding:5px 12px;background:transparent;color:var(--ink);cursor:pointer;font:inherit;font-size:12px;font-weight:500;border-radius:999px}
   .seg-toggle button.on{background:var(--viiv-red);color:#fff}
   .seg-toggle button:focus-visible{outline:none;box-shadow:var(--focus)}
@@ -58,7 +62,7 @@
   .onflag{font-size:12px;border:1px solid var(--navy-soft);color:var(--ink);display:inline-block;padding:4px 10px;border-radius:999px;margin:0 0 16px;background:var(--paper)}
 
   .modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:6px}
-  .mode{border:1px solid var(--soft);border-radius:var(--r-lg);padding:22px 22px 20px;background:var(--paper);text-align:left;cursor:pointer;font:inherit;color:var(--ink);display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow);transition:border-color .15s,transform .15s}
+  .mode{border:1px solid var(--border-strong);border-radius:var(--r-lg);padding:22px 22px 20px;background:var(--paper);text-align:left;cursor:pointer;font:inherit;color:var(--ink);display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow);transition:border-color .15s,transform .15s}
   .mode:hover{border-color:var(--navy-soft);transform:translateY(-1px)}
   .mode:focus-visible{outline:none;box-shadow:var(--shadow),var(--focus)}
   .mode.dashed{border-style:dashed;border-color:var(--navy-soft)}
@@ -109,7 +113,7 @@
   .hf .cue{font-size:11.5px;color:var(--muted);margin-top:3px}
   .hf button{white-space:nowrap}
 
-  textarea{width:100%;min-height:92px;border:1px solid var(--soft);border-radius:var(--r-sm);padding:10px 12px;font:inherit;font-size:14px;resize:vertical;background:var(--paper);color:var(--ink)}
+  textarea{width:100%;min-height:92px;border:1px solid var(--border-strong);border-radius:var(--r-sm);padding:10px 12px;font:inherit;font-size:14px;resize:vertical;background:var(--paper);color:var(--ink)}
   textarea:focus-visible,input:focus-visible{outline:none;border-color:var(--viiv-red);box-shadow:var(--focus)}
   .actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;align-items:center}
   button{font:inherit;font-size:14px;font-weight:500;padding:9px 18px;border:1px solid var(--ink);border-radius:var(--r-sm);background:var(--paper);color:var(--ink);cursor:pointer;transition:background .15s,border-color .15s}
@@ -118,11 +122,11 @@
   button.primary:hover{background:var(--viiv-red-hover);border-color:var(--viiv-red-hover)}
   button.link{border:none;padding:9px 0;text-decoration:underline;text-underline-offset:3px;background:none}
   button.link:hover{background:none;color:var(--viiv-red)}
-  button.small{font-size:12px;padding:5px 11px}
+  button.small{font-size:12px;padding:5px 11px;min-height:32px}
   button:disabled{opacity:.45;cursor:not-allowed}
   button:focus-visible{outline:none;box-shadow:var(--focus)}
   .choices{display:flex;flex-direction:column;gap:8px;max-width:62ch}
-  .choices label{border:1px solid var(--soft);border-radius:var(--r-sm);background:var(--paper);padding:10px 12px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;font-size:14px}
+  .choices label{border:1px solid var(--border-strong);border-radius:var(--r-sm);background:var(--paper);padding:10px 12px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;font-size:14px}
   .choices label:hover{border-color:var(--navy-soft)}
   .choices label:has(input:checked){border-color:var(--viiv-red);box-shadow:inset 0 0 0 1px var(--viiv-red)}
   .choices input{margin-top:3px;accent-color:var(--viiv-red)}
@@ -138,7 +142,7 @@
 
   /* treatment-path board (Mode 1) */
   .routes{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 22px}
-  .rchip{font-size:13px;padding:7px 12px;border:1px solid var(--soft);border-radius:999px;background:var(--paper);color:var(--ink)}
+  .rchip{font-size:13px;padding:7px 12px;min-height:36px;border:1px solid var(--border-strong);border-radius:999px;background:var(--paper);color:var(--ink)}
   .rchip.on{background:var(--ink);border-color:var(--ink);color:#fff}
   .rchip:hover{border-color:var(--navy-soft)}
   .path{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:0 0 6px}
@@ -150,11 +154,11 @@
   .pcard.weet{border-color:var(--soft)}
   .pcard .tab{position:absolute;top:-1px;left:14px;height:12px;width:32px;background:var(--viiv-sand);border-radius:0 0 6px 6px}
   .pcard .sym{width:24px;height:24px;margin-top:8px}
-  .pcard .pt{font-size:13.5px;font-weight:600;line-height:1.25}
+  .pcard .pt{font-size:13.5px;font-weight:600;line-height:1.25;margin:0}
   .pcard .ps{font-size:11.5px;color:var(--muted);line-height:1.4;flex:1}
   .pcard .lean{font-size:10.5px;color:var(--ink);background:var(--wash);border:1px solid var(--viiv-sand);border-radius:999px;padding:2px 8px;align-self:flex-start}
-  .sort{display:flex;border:1px solid var(--soft);border-radius:999px;overflow:hidden;margin-top:6px}
-  .sort button{flex:1;border:none;border-radius:0;padding:5px 0;font-size:11px;font-weight:500;background:var(--paper);color:var(--ink)}
+  .sort{display:flex;border:1px solid var(--border-strong);border-radius:999px;overflow:hidden;margin-top:6px}
+  .sort button{flex:1;border:none;border-radius:0;padding:5px 0;min-height:36px;font-size:11px;font-weight:500;background:var(--paper);color:var(--ink)}
   .sort button:hover{background:var(--wash)}
   .sort button.on{background:var(--ink);color:#fff}
   .hint{font-size:12.5px;color:var(--muted);margin:0 0 20px}
@@ -186,6 +190,7 @@
 </style>
 </head>
 <body>
+<a class="skip" href="#stage">Naar inhoud / Skip to content</a>
 <div class="wrap">
   <header>
     <div class="left">
@@ -200,8 +205,8 @@
       <div class="seg-toggle" id="langCtl"></div>
     </div>
   </header>
-  <div class="rail" id="rail"></div>
-  <div id="stage"></div>
+  <nav class="rail" id="rail" aria-label="Voortgang / Progress"></nav>
+  <main id="stage" tabindex="-1"></main>
 </div>
 
 <script>
@@ -209,13 +214,13 @@
 const T = {
   nl:{
     tag:"Neutraal SDM- & barrière-instrument · speelbaar prototype",
-    role_doc:"Arts", role_fac:"Facilitator",
+    role_doc:"Arts · preview", role_fac:"Facilitator",
     start_k:"Start", start_h:"Welk spel spelen we?",
     start_lead:"Twee speelwijzen, één deck. Kies vooraf wat de sessie moet opleveren — zo blijft het gesprek op één doel.",
     m1_name:"Behandelpad-scan", m1_for:"Voor sceptici en twijfelaars · geen patiënt",
     m1_desc:"De arts is de expert over de eigen praktijk. Jullie brengen samen in kaart waar het behandelpad knelt: capaciteit, planning, logistiek, financiering. Uitkomst: een barrièrekaart.",
     m2_name:"Patiëntcasus", m2_for:"Voor believers en gevorderden · met patiënt",
-    m2_desc:"De arts oefent een gesprek met een uitgedeelde, kloppende patiënt. Jij bent facilitator en de stem van de patiënt — sparringpartner, geen leraar. Uitkomst: reflectie plus de barrières die het gesprek blootlegt.",
+    m2_desc:"Jouw instrument als facilitator: jij speelt de patiënt, onthult en legt vast. De arts voert het gesprek zonder scherm — sparringpartner, geen leraar. Digitale artsweergave is optie 2. Uitkomst: reflectie plus de barrières die het gesprek blootlegt.",
     start_note:"Klinische feiten in casussen zijn fictief en worden op plausibiliteit getoetst door Medical. Specificatie van middelen blijft leeg tot ViiV compliant tekst aanlevert.",
     next:"Volgende", back:"Vorige", finish:"Afronden", newround:"Nieuwe ronde", home:"Terug naar start",
     copy:"Kopieer barrièrekaart", copied:"Gekopieerd",
@@ -247,7 +252,10 @@ const T = {
     explore_lead_fac:"Jij bént [naam]. Antwoord hardop, kort en natuurlijk. Vraagt de arts open naar iets uit de lijst hieronder, antwoord dan in de rol én tik 'Onthul' — zo verschijnt het bij de arts op het scherm. Niet gevraagd? Dan blijft het verborgen; dat is de oefening.",
     explore_q:"Wat kwam er in het gesprek naar boven?",
     surfaced:"Wat [naam] vertelde", nothing_yet:"Wat [naam] vertelt, komt hier te staan.",
-    legend:"Arts: vraagt en oefent · Facilitator: speelt [naam] en bedient het scherm",
+    legend:"Facilitator: speelt [naam] en bedient dit scherm · Arts: voert het gesprek, zonder scherm",
+    doc_preview_note:"Optie 2 — digitale artsweergave (preview). In de basisopzet voert de arts het gesprek zonder scherm; dit is wat later op papier of een tweede scherm kan verschijnen.",
+    plan_lead_fac:"Vraag de arts hardop te kiezen — er is geen goed antwoord — en leg de keuze hier vast. Daarna verandert de context.",
+    notes_opt:"Notities (optioneel)",
     reveal:"Onthul", revealed:"Onthuld",
     plan_k:"Voorlopige aanpak", plan_h:"Hoe geef je het vervolg vorm?",
     plan_lead:"Geen goed of fout — het gaat om de kwaliteit van het gesprek. Leg je aanpak vast; daarna verandert de context.",
@@ -299,13 +307,13 @@ const T = {
   },
   en:{
     tag:"Neutral SDM & barrier instrument · playable prototype",
-    role_doc:"Physician", role_fac:"Facilitator",
+    role_doc:"Physician · preview", role_fac:"Facilitator",
     start_k:"Start", start_h:"Which game are we playing?",
     start_lead:"Two ways to play, one deck. Choose upfront what the session should produce — it keeps the conversation on a single purpose.",
     m1_name:"Treatment-path scan", m1_for:"For sceptics and the undecided · no patient",
     m1_desc:"The physician is the expert on their own practice. Together you map where the treatment path pinches: capacity, scheduling, logistics, funding. Output: a barrier map.",
     m2_name:"Patient case", m2_for:"For believers and advanced users · with a patient",
-    m2_desc:"The physician practises a conversation with a dealt, coherent patient. You are facilitator and the patient's voice — a sparring partner, not a teacher. Output: reflection plus the barriers the conversation surfaces.",
+    m2_desc:"Your instrument as facilitator: you play the patient, reveal and capture. The physician has the conversation without a screen — a sparring partner, not a teacher. A digital physician view is option 2. Output: reflection plus the barriers the conversation surfaces.",
     start_note:"Clinical facts in cases are fictional and checked for plausibility by Medical. Product specifics stay empty until ViiV supplies compliant copy.",
     next:"Next", back:"Back", finish:"Finish", newround:"New round", home:"Back to start",
     copy:"Copy barrier map", copied:"Copied",
@@ -337,7 +345,10 @@ const T = {
     explore_lead_fac:"You ARE [name]. Answer out loud, brief and natural. When the physician asks openly about something in the list below, answer in role and tap 'Reveal' — it then appears on the physician's screen. Not asked? It stays hidden; that is the exercise.",
     explore_q:"What came up in the conversation?",
     surfaced:"What [name] told you", nothing_yet:"Whatever [name] tells you will appear here.",
-    legend:"Physician: asks and practises · Facilitator: plays [name] and runs the screen",
+    legend:"Facilitator: plays [name] and runs this screen · Physician: has the conversation, no screen",
+    doc_preview_note:"Option 2 — digital physician view (preview). In the base setup the physician plays the conversation without a screen; this is what could later appear on paper or a second screen.",
+    plan_lead_fac:"Ask the physician to choose out loud — there is no right answer — and record the choice here. Then the context shifts.",
+    notes_opt:"Notes (optional)",
     reveal:"Reveal", revealed:"Revealed",
     plan_k:"Provisional approach", plan_h:"How do you shape what comes next?",
     plan_lead:"No right or wrong — this is about the quality of the conversation. Commit to an approach; then the context shifts.",
@@ -486,13 +497,13 @@ const ROUTES = [
 ];
 
 const SYM = {
-  clock:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="13" r="9"/><path d="M13 8 V13 L16.5 15"/></svg>',
-  box:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9 L13 5 L21 9 L21 18 L13 22 L5 18 Z M5 9 L13 13 L21 9 M13 13 V22"/></svg>',
-  loop:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13 A7 7 0 1 1 17.5 7.7"/><path d="M17.5 4.5 L17.5 8 L21 8"/></svg>',
-  circle:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="13" r="9"/></svg>',
-  triangle:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4 L22 21 L4 21 Z"/></svg>',
-  cross:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6 L20 20 M20 6 L6 20"/></svg>',
-  grid:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="16" height="16"/><path d="M5 13 H21 M13 5 V21"/></svg>'
+  clock:'<svg class="sym" aria-hidden="true" focusable="false" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="13" r="9"/><path d="M13 8 V13 L16.5 15"/></svg>',
+  box:'<svg class="sym" aria-hidden="true" focusable="false" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9 L13 5 L21 9 L21 18 L13 22 L5 18 Z M5 9 L13 13 L21 9 M13 13 V22"/></svg>',
+  loop:'<svg class="sym" aria-hidden="true" focusable="false" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13 A7 7 0 1 1 17.5 7.7"/><path d="M17.5 4.5 L17.5 8 L21 8"/></svg>',
+  circle:'<svg class="sym" aria-hidden="true" focusable="false" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="13" r="9"/></svg>',
+  triangle:'<svg class="sym" aria-hidden="true" focusable="false" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4 L22 21 L4 21 Z"/></svg>',
+  cross:'<svg class="sym" aria-hidden="true" focusable="false" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6 L20 20 M20 6 L6 20"/></svg>',
+  grid:'<svg class="sym" aria-hidden="true" focusable="false" viewBox="0 0 26 26" fill="none" stroke="#071D49" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="16" height="16"/><path d="M5 13 H21 M13 5 V21"/></svg>'
 };
 
 /* ============ State ============ */
@@ -508,7 +519,7 @@ function start(mode){
   if(mode==="m2"){
     S.profile = PROFILES[Math.floor(Math.random()*PROFILES.length)];
     S.twist   = TWISTS[Math.floor(Math.random()*TWISTS.length)];
-    S.role="doc";
+    S.role="fac";
   }
   render();
 }
@@ -523,7 +534,7 @@ function render(){
   const rc = document.getElementById("roleCtl");
   if(S.mode==="m2"){
     rc.style.display="inline-flex";
-    rc.innerHTML = [["doc",t("role_doc")],["fac",t("role_fac")]].map(([r,lbl])=>
+    rc.innerHTML = [["fac",t("role_fac")],["doc",t("role_doc")]].map(([r,lbl])=>
       `<button class="${S.role===r?'on':''}" onclick="setRole('${r}')" aria-pressed="${S.role===r}">${lbl}</button>`).join("");
   } else rc.style.display="none";
 
@@ -531,7 +542,7 @@ function render(){
   if(!S.mode){ rail.innerHTML=""; stage.innerHTML=startScreen(); return; }
   if(S.mode==="log"){ rail.innerHTML=""; stage.innerHTML=logScreen(); return; }
   const steps = S.mode==="m1" ? t("m1_steps") : t("m2_steps");
-  rail.innerHTML = steps.map((s,idx)=>`<span class="${idx===S.i?'on':idx<S.i?'done':''}">${s}</span>`).join("");
+  rail.innerHTML = steps.map((s,idx)=>`<span class="${idx===S.i?'on':idx<S.i?'done':''}"${idx===S.i?' aria-current="step"':''}>${s}</span>`).join("");
   stage.innerHTML = S.mode==="m1" ? mode1() : mode2();
 }
 
@@ -563,10 +574,10 @@ function mode1(){
   const lab = () => `style="font-size:11.5px;color:var(--muted);display:block;margin-bottom:4px;font-weight:500"`;
   const panel = (p, sayTxt, whyTxt, fields) => `
       <div class="kpanel">
-        <div class="kt">${SYM[p.sym]}${L(p.t)}</div>
+        <h3 class="kt">${SYM[p.sym]}${L(p.t)}</h3>
         <div class="say"><div class="ck">${t("say_k")}</div><p class="line">\u201c${sayTxt}\u201d</p><div class="why"><b>${t("why_k")}:</b> ${whyTxt}</div></div>
         <div style="display:grid;grid-template-columns:${fields.length>1?'1fr 1fr':'1fr'};gap:12px">
-          ${fields.map(([id,lbl])=>`<div><label ${lab()}>${lbl}</label><textarea id="${id}_${p.k}" style="min-height:70px">${esc(S.caps[p.k+"_"+id]||"")}</textarea></div>`).join("")}
+          ${fields.map(([id,lbl])=>`<div><label ${lab()}>${lbl}</label><textarea id="${id}_${p.k}" aria-label="${lbl}" style="min-height:70px">${esc(S.caps[p.k+"_"+id]||"")}</textarea></div>`).join("")}
         </div>
       </div>`;
   const kn=by("knelt"), lo=by("loopt"), we=by("weet");
@@ -578,18 +589,18 @@ function mode1(){
     <div class="kicker">${t("route_k")}</div>
     <p class="hint" style="margin-bottom:8px">${t("route_lead")}</p>
     <div class="routes">
-      <button class="rchip ${!S.route?'on':''}" onclick="setRoute(null)">${t("route_none")}</button>
-      ${ROUTES.map(r=>`<button class="rchip ${S.route===r.k?'on':''}" onclick="setRoute('${r.k}')" title="${esc(L(r.d))}">${L(r.n)}</button>`).join("")}
+      <button class="rchip ${!S.route?'on':''}" aria-pressed="${!S.route}" onclick="setRoute(null)">${t("route_none")}</button>
+      ${ROUTES.map(r=>`<button class="rchip ${S.route===r.k?'on':''}" aria-pressed="${S.route===r.k}" onclick="setRoute('${r.k}')" title="${esc(L(r.d))}" aria-label="${L(r.n)} — ${esc(L(r.d))}">${L(r.n)}</button>`).join("")}
     </div>
     <div class="path">
       ${SCAN.map(p=>{ const st=S.sort[p.k]||""; return `
         <div class="pcard ${st}">
           <div class="tab"></div>${SYM[p.sym]}
-          <div class="pt">${L(p.t)}</div>
+          <h3 class="pt">${L(p.t)}</h3>
           <div class="ps">${L(p.s)}</div>
           ${leans.includes(p.k)?`<span class="lean">${t("leans")}</span>`:""}
           <div class="sort">
-            ${["loopt","knelt","weet"].map(v=>`<button class="${st===v?'on':''}" onclick="setSort('${p.k}','${v}')">${t("sort_"+v)}</button>`).join("")}
+            ${["loopt","knelt","weet"].map(v=>`<button class="${st===v?'on':''}" aria-pressed="${st===v}" onclick="setSort('${p.k}','${v}')">${t("sort_"+v)}</button>`).join("")}
           </div>
         </div>`; }).join("")}
     </div>
@@ -612,6 +623,7 @@ function mode2(){
   if(S.i===0) return `
       ${head("case_k","case_h")}
       <p class="lead">${F(doc?t("case_lead_doc"):t("case_lead_fac"))}</p>
+      ${doc?`<p class="hint">${t("doc_preview_note")}</p>`:""}
       <div class="cardwrap">
         <div>${card(P)}<div class="actions" style="margin-top:10px"><button class="small" onclick="shuffleProfile()">${t("shuffle")}</button></div></div>
         <div>${dossier(P)}${doc?"":hiddenPanel(P,false)}</div>
@@ -620,19 +632,19 @@ function mode2(){
   if(S.i===1) return `
       ${head("open_k","open_h")}
       <p class="lead">${F(doc?t("open_lead_doc"):t("open_lead_fac"))}</p>
-      ${doc ? `<textarea id="cap" placeholder="${t("open_q")}">${esc(S.caps.open||"")}</textarea><div class="err" id="err">${t("need_text")}</div>` : voice(P, L(P.prio))}
+      ${doc ? `<textarea id="cap" aria-label="${t("open_q")}" placeholder="${t("open_q")}">${esc(S.caps.open||"")}</textarea><div class="err" id="err" role="alert">${t("need_text")}</div>` : voice(P, L(P.prio))}
       ${nav()}`;
   if(S.i===2) return `
       ${head("explore_k","explore_h")}
       <p class="lead">${F(doc?t("explore_lead_doc"):t("explore_lead_fac"))}</p>
-      ${doc ? surfacedPanel(P)+`<textarea id="cap" placeholder="${t("explore_q")}" style="margin-top:14px">${esc(S.caps.explore||"")}</textarea><div class="err" id="err">${t("need_text")}</div>` : hiddenPanel(P,true)}
+      ${doc ? surfacedPanel(P)+`<textarea id="cap" aria-label="${t("explore_q")}" placeholder="${t("explore_q")}" style="margin-top:14px">${esc(S.caps.explore||"")}</textarea><div class="err" id="err" role="alert">${t("need_text")}</div>` : hiddenPanel(P,true)+`<div style="margin-top:14px"><label class="hint" style="display:block;margin-bottom:4px" for="cap">${t("notes_opt")}</label><textarea id="cap">${esc(S.caps.explore||"")}</textarea></div>`}
       ${nav()}`;
   if(S.i===3){ const opts=t("plan_opts"); return `
       ${head("plan_k","plan_h")}
-      <p class="lead">${t("plan_lead")}</p>
+      <p class="lead">${doc?t("plan_lead"):t("plan_lead_fac")}</p>
       ${practicePanel()}
       <div class="choices">${opts.map(o=>`<label><input type="radio" name="plan" value="${esc(o)}" ${S.caps.plan===o?'checked':''}> <span>${o}</span></label>`).join("")}</div>
-      <div class="err" id="err">${t("need_choice")}</div>
+      <div class="err" id="err" role="alert">${t("need_choice")}</div>
       ${nav()}`; }
   if(S.i===4) return `
       ${head("twist_k","twist_h")}
@@ -644,7 +656,7 @@ function mode2(){
   return `
       ${head("hold_k","hold_h")}
       <p class="lead">${t("hold_lead")}</p>
-      <textarea id="cap" placeholder="${t("hold_q")}">${esc(S.caps.hold||"")}</textarea><div class="err" id="err">${t("need_text")}</div>
+      <textarea id="cap" aria-label="${t("hold_q")}" placeholder="${t("hold_q")}">${esc(S.caps.hold||"")}</textarea><div class="err" id="err" role="alert">${t("need_text")}</div>
       ${nav()}`;
 }
 
@@ -674,7 +686,7 @@ function hiddenPanel(P,interactive){
 }
 function surfacedPanel(P){
   const items = S.revealed.map(idx=>L(P.hidden[idx]));
-  return `<div class="revealed"><div class="ck">${F(t("surfaced"))}</div>
+  return `<div class="revealed" aria-live="polite"><div class="ck">${F(t("surfaced"))}</div>
     ${items.length?items.map(x=>`<div>— ${x}</div>`).join(""):`<span class="muted">${F(t("nothing_yet"))}</span>`}</div>`;
 }
 function revealFact(idx){ if(!S.revealed.includes(idx)) S.revealed.push(idx); render(); }
@@ -729,7 +741,7 @@ function collect(){
   }
   const doc=S.role==="doc";
   if(S.i===1 && doc){ const v=val("cap"); if(!v){show(err);return false;} S.caps.open=v; }
-  if(S.i===2 && doc){ const v=val("cap"); if(!v){show(err);return false;} S.caps.explore=v; }
+  if(S.i===2){ const v=val("cap"); if(doc && !v){show(err);return false;} if(v||doc) S.caps.explore=v; }
   if(S.i===3){ const sel=document.querySelector('input[name="plan"]:checked'); if(!sel){show(err);return false;} S.caps.plan=sel.value; }
   if(S.i===5){ const v=val("cap"); if(!v){show(err);return false;} S.caps.hold=v; }
   return true;

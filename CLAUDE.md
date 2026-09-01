@@ -86,6 +86,15 @@ backfired. Structural fix, not wording:
   sees the case + reflection prompts; the facilitator sees the patient's scripted voice,
   the hidden facts, the twist control and capture.
 
+**Facilitator-first (v2.2 decision):** this app is in its base form the FACILITATOR'S
+instrument. The physician plays the conversation without a screen (paper case card /
+the spoken exchange); a digital physician view is **option 2**. Consequences: Mode 2
+defaults to the Facilitator view; the toggle is labelled "Arts · preview" and the
+physician view carries an option-2 note; the facilitator view is self-sufficient
+(patient voice, hidden facts, optional notes at Explore, the choice capture at
+Approach with its own facilitator lead, the barrier capture at Hold). Never make a
+required capture live ONLY in the physician view.
+
 ### 3. Rich patient data — and the compliance distinction that allows it
 Playtest: "we knew too little about the patient to hold an SDM conversation."
 Profiles now carry demographics, medical picture, care use, lifestyle, and what the
@@ -168,6 +177,22 @@ barriers + facilitators (centre-specific); comorbidity clinical bodies (ViiV-gat
   from GitHub Pages. `index.v1.html` is kept for reference only.
 - State is in-memory; the barrier map is copied out via the clipboard button.
   Persistence/export is a sensible next feature (localStorage is fine on Pages).
+
+## Accessibility — WCAG 2.1 AA baseline (maintain on every change)
+
+Implemented and to be preserved: skip link + `<main>` landmark; progress rail as
+`<nav>` with `aria-current="step"`; headings (h1 brand, h2 per screen, h3 card/panel
+titles); decorative SVGs `aria-hidden`; `aria-pressed` on all toggle-like controls
+(language, role, sort, route); errors as `role="alert"` that say what to do;
+every input labelled (visible `<label for>` or `aria-label` — placeholders are not
+labels); revealed facts announced via `aria-live="polite"`; visible focus everywhere
+incl. `summary`; form/control borders use `--border-strong` (#5B6472, ≥3:1 non-text
+contrast — never `--viiv-border` on interactive boundaries); touch targets ≥36px
+(≥32px for small chips); `prefers-reduced-motion` respected; `document.documentElement.lang`
+follows the language switch. Text contrast tokens are verified (navy/gray on warm white,
+white on Red Ribbon ≈4.8:1) — re-check when introducing any new colour pairing.
+Not yet done and worth a manual pass before the CM: screen-reader run (VoiceOver) and
+200% zoom check.
 
 ## Scope for the Cycle Meeting (3 weeks)
 
