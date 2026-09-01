@@ -226,8 +226,15 @@ const T = {
     m1_what:"Wat knelt hier?", m1_help:"Wat zou helpen?",
     sort_loopt:"Loopt", sort_knelt:"Knelt", sort_weet:"Weet niet",
     route_k:"Implementatieroute · optioneel", route_lead:"Leg er een routekaart bij: je ziet op welke stappen van het pad die route leunt.",
-    route_none:"Geen route", leans:"leunt hierop", knelt_k:"Waar het knelt — vraag door",
-    sorted_hint:"Sorteer de kaarten; bij \u2018Knelt\u2019 opent het doorvragen.",
+    route_none:"Geen route", leans:"leunt hierop",
+    knelt_k:"Waar het knelt — vraag door", loopt_k:"Waar het loopt — vraag óók door", weet_k:"Waar je het niet weet",
+    loopt_q:"Hoe hebben jullie dit geregeld? Wat maakt dat het loopt?", weet_q:"Wie weet dit bij jullie?",
+    say_loopt:"Mooi dat dit loopt — hoe hebben jullie dat geregeld? Wat maakt dat het werkt?",
+    why_loopt:"Waar het loopt zit de oplossing die een ander centrum mist. Vraag door met dezelfde nieuwsgierigheid als bij een knelpunt; dit is wat we delen.",
+    say_weet:"Geen probleem — wie zou dit bij jullie weten?",
+    why_weet:"\u2018Weet niet\u2019 is geen dood spoor. Het wijst naar wie je hierna spreekt: vaak de verpleegkundige of de apotheker.",
+    works_lbl:"Wat hier loopt", who_lbl:"Wie weet dit",
+    sorted_hint:"Sorteer de kaarten; elke stand opent een eigen vervolgvraag.",
     case_k:"De patiënt", case_h:"Je patiënt vandaag",
     case_lead_doc:"Een uitgedeelde casus — een gegeven, geen puzzel. Lees het dossier zoals je een echt dossier zou lezen. De facilitator tegenover je speelt zo dadelijk [naam]: alles wat je wilt weten, vraag je hardop.",
     case_lead_fac:"Jij bent straks deze patiënt. Lees het dossier én de verborgen feiten: die geef je alleen prijs als de arts er open naar vraagt.",
@@ -309,8 +316,15 @@ const T = {
     m1_what:"What pinches here?", m1_help:"What would help?",
     sort_loopt:"Runs", sort_knelt:"Pinches", sort_weet:"Don't know",
     route_k:"Implementation route · optional", route_lead:"Add a route card: you see which steps of the path that route leans on.",
-    route_none:"No route", leans:"leans on this", knelt_k:"Where it pinches — ask further",
-    sorted_hint:"Sort the cards; \u2018Pinches\u2019 opens the follow-up.",
+    route_none:"No route", leans:"leans on this",
+    knelt_k:"Where it pinches — ask further", loopt_k:"Where it runs — ask further too", weet_k:"Where you don't know",
+    loopt_q:"How have you arranged this? What makes it run?", weet_q:"Who would know this in your practice?",
+    say_loopt:"Good that this runs — how have you arranged that? What makes it work?",
+    why_loopt:"Where it runs is the solution another centre is missing. Ask with the same curiosity as for a pinch; this is what we share.",
+    say_weet:"No problem — who would know this in your practice?",
+    why_weet:"\u2018Don't know\u2019 is not a dead end. It points to who you speak to next: often the nurse or the pharmacist.",
+    works_lbl:"What runs here", who_lbl:"Who knows this",
+    sorted_hint:"Sort the cards; each state opens its own follow-up.",
     case_k:"The patient", case_h:"Your patient today",
     case_lead_doc:"A dealt case — a given, not a puzzle. Read the file as you would a real one. The facilitator opposite you will play [name] in a moment: anything you want to know, ask out loud.",
     case_lead_fac:"You will be this patient. Read the file and the hidden facts: give those away only when the physician asks openly.",
@@ -545,7 +559,17 @@ function mode1(){
   }
   const route = ROUTES.find(r=>r.k===S.route);
   const leans = route ? route.leans : [];
-  const knelt = SCAN.filter(p=>S.sort[p.k]==="knelt");
+  const by = st => SCAN.filter(p=>S.sort[p.k]===st);
+  const lab = () => `style="font-size:11.5px;color:var(--muted);display:block;margin-bottom:4px;font-weight:500"`;
+  const panel = (p, sayTxt, whyTxt, fields) => `
+      <div class="kpanel">
+        <div class="kt">${SYM[p.sym]}${L(p.t)}</div>
+        <div class="say"><div class="ck">${t("say_k")}</div><p class="line">\u201c${sayTxt}\u201d</p><div class="why"><b>${t("why_k")}:</b> ${whyTxt}</div></div>
+        <div style="display:grid;grid-template-columns:${fields.length>1?'1fr 1fr':'1fr'};gap:12px">
+          ${fields.map(([id,lbl])=>`<div><label ${lab()}>${lbl}</label><textarea id="${id}_${p.k}" style="min-height:70px">${esc(S.caps[p.k+"_"+id]||"")}</textarea></div>`).join("")}
+        </div>
+      </div>`;
+  const kn=by("knelt"), lo=by("loopt"), we=by("weet");
   return `
     <div class="kicker">${t("step")} 1 / ${total}</div>
     <h2>${t("m1_h")}</h2>
@@ -570,16 +594,12 @@ function mode1(){
         </div>`; }).join("")}
     </div>
     <p class="hint">${t("sorted_hint")}</p>
-    ${knelt.length?`<div class="kicker">${t("knelt_k")}</div>`:""}
-    ${knelt.map(p=>`
-      <div class="kpanel">
-        <div class="kt">${SYM[p.sym]}${L(p.t)}</div>
-        <div class="say"><div class="ck">${t("say_k")}</div><p class="line">\u201c${L(p.say)}\u201d</p><div class="why"><b>${t("why_k")}:</b> ${L(p.why)}</div></div>
-        <div class="two" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-          <div><label style="font-size:11.5px;color:var(--muted);display:block;margin-bottom:4px;font-weight:500">${t("m1_what")}</label><textarea id="w_${p.k}" style="min-height:70px">${esc(S.caps[p.k+"_w"]||"")}</textarea></div>
-          <div><label style="font-size:11.5px;color:var(--muted);display:block;margin-bottom:4px;font-weight:500">${t("m1_help")}</label><textarea id="h_${p.k}" style="min-height:70px">${esc(S.caps[p.k+"_h"]||"")}</textarea></div>
-        </div>
-      </div>`).join("")}
+    ${kn.length?`<div class="kicker">${t("knelt_k")}</div>`:""}
+    ${kn.map(p=>panel(p, L(p.say), L(p.why), [["w",t("m1_what")],["h",t("m1_help")]])).join("")}
+    ${lo.length?`<div class="kicker" style="margin-top:6px">${t("loopt_k")}</div>`:""}
+    ${lo.map(p=>panel(p, t("say_loopt"), t("why_loopt"), [["ok",t("loopt_q")]])).join("")}
+    ${we.length?`<div class="kicker" style="margin-top:6px">${t("weet_k")}</div>`:""}
+    ${we.map(p=>panel(p, t("say_weet"), t("why_weet"), [["who",t("weet_q")]])).join("")}
     ${nav()}`;
 }
 function setSort(k,v){ collect(); S.sort[k] = (S.sort[k]===v) ? "" : v; render(); }
@@ -669,13 +689,16 @@ function script(mode){
 /* Bridge: practice-level barriers from the most recent scan this session */
 function practiceProfile(){
   const r = S.log.find(x=>x.mode==="m1"); if(!r) return null;
-  const items = r.items.filter(it=>it.key && it.st==="knelt"); return items.length?items:null;
+  const items = r.items.filter(it=>it.key && (it.st==="knelt" || it.st==="loopt")); return items.length?items:null;
 }
 function practicePanel(){
   const pp = practiceProfile();
   if(!pp) return `<div class="practice none">${t("practice_none")}</div>`;
+  const kn=pp.filter(it=>it.st==="knelt"), lo=pp.filter(it=>it.st==="loopt");
+  const row=(it,txt)=>{ const sc=SCAN.find(x=>x.k===it.key); return `<div class="pin"><b>${L(sc.t)}</b><div>${esc(txt||"\u2014")}<div class="mn">${t("practice_means")}: ${L(sc.m)}</div></div></div>`; };
   return `<div class="practice"><div class="ck">${t("practice_k")}</div><p class="lead2">${t("practice_lead")}</p>
-    ${pp.map(it=>{ const sc=SCAN.find(x=>x.k===it.key); return `<div class="pin"><b>${L(sc.t)}</b><div>${esc(it.w||"\u2014")}<div class="mn">${t("practice_means")}: ${L(sc.m)}</div></div></div>`; }).join("")}</div>`;
+    ${kn.length?`<div class="ck" style="margin-top:8px">${t("sort_knelt")}</div>`+kn.map(it=>row(it,it.w)).join(""):""}
+    ${lo.length?`<div class="ck" style="margin-top:12px">${t("works_lbl")}</div>`+lo.map(it=>row(it,it.ok)).join(""):""}</div>`;
 }
 function shuffleProfile(){
   const idx=(PROFILES.indexOf(S.profile)+1)%PROFILES.length;
@@ -701,8 +724,7 @@ const show = el => { if(el) el.style.display="block"; };
 function collect(){
   const err=document.getElementById("err");
   if(S.mode==="m1"){
-    if(S.i===0) SCAN.forEach(p=>{ if(S.sort[p.k]==="knelt"){ const w=document.getElementById("w_"+p.k), h=document.getElementById("h_"+p.k);
-      if(w) S.caps[p.k+"_w"]=w.value.trim(); if(h) S.caps[p.k+"_h"]=h.value.trim(); } });
+    if(S.i===0) SCAN.forEach(p=>{ ["w","h","ok","who"].forEach(id=>{ const el=document.getElementById(id+"_"+p.k); if(el) S.caps[p.k+"_"+id]=el.value.trim(); }); });
     return true;
   }
   const doc=S.role==="doc";
@@ -725,8 +747,8 @@ function finish(){
     const route = ROUTES.find(r=>r.k===S.route);
     e.title = t("m1_name") + (route ? " · " + L(route.n) : "");
     SCAN.forEach(p=>{ const st=S.sort[p.k]||""; if(!st) return;
-      const w=st==="knelt"?(S.caps[p.k+"_w"]||""):"", h=st==="knelt"?(S.caps[p.k+"_h"]||""):"";
-      e.items.push({key:p.k, k:L(p.t), st, w, h}); });
+      const g=id=>S.caps[p.k+"_"+id]||"";
+      e.items.push({key:p.k, k:L(p.t), st, w:st==="knelt"?g("w"):"", h:st==="knelt"?g("h"):"", ok:st==="loopt"?g("ok"):"", who:st==="weet"?g("who"):""}); });
   } else {
     e.title = `${t("m2_name")} · ${S.profile.name}`;
     e.twist = L(S.twist);
@@ -740,7 +762,7 @@ function logScreen(){
   const n=S.log.length;
   const body = S.log.map((r,idx)=>`<div class="entry">
       <div class="q">${t("round")} ${n-idx} · ${r.title}</div>
-      ${r.items.map(it=>`<div><strong>${it.k}:</strong> ${it.st?`<em>${stLbl(it.st)}</em>${it.w?" — ":""}`:""}${esc(it.w||"")}${it.h?` <span class="muted">→ ${esc(it.h)}</span>`:""}</div>`).join("")}
+      ${r.items.map(it=>{ const body = it.w||it.ok||it.who||""; return `<div><strong>${it.k}:</strong> ${it.st?`<em>${stLbl(it.st)}</em>${body?" — ":""}`:""}${esc(body)}${it.h?` <span class="muted">→ ${esc(it.h)}</span>`:""}</div>`; }).join("")}
       ${r.surfaced&&r.surfaced.length?`<div class="q" style="margin-top:6px">${t("surfaced_lbl")}: ${r.surfaced.map(esc).join(" · ")}</div>`:""}
       ${r.twist?`<div class="q">${t("twist_lbl")}: ${esc(r.twist)}</div>`:""}
     </div>`).join("");
@@ -755,7 +777,7 @@ function logScreen(){
 function copyLog(b){
   const n=S.log.length;
   const txt=S.log.map((r,idx)=>`${t("round")} ${n-idx} — ${r.title}\n`+
-    r.items.map(it=>`  ${it.k}: ${it.st?stLbl(it.st)+(it.w?" — ":""):""}${it.w||""}${it.h?`  → ${it.h}`:""}`).join("\n")+
+    r.items.map(it=>{ const body=it.w||it.ok||it.who||""; return `  ${it.k}: ${it.st?stLbl(it.st)+(body?" — ":""):""}${body}${it.h?`  → ${it.h}`:""}`; }).join("\n")+
     (r.surfaced&&r.surfaced.length?`\n  ${t("surfaced_lbl")}: ${r.surfaced.join(" · ")}`:"")+
     (r.twist?`\n  ${t("twist_lbl")}: ${r.twist}`:"")).join("\n\n");
   navigator.clipboard.writeText(txt).then(()=>{ const o=b.textContent; b.textContent=t("copied"); setTimeout(()=>b.textContent=o,1400); });

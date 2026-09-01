@@ -47,8 +47,11 @@ and role drift. These are two jobs with two loops:
   Optional implementation-route cards (in the clinic / home care / pharmacy — from the
   existing Implementation Routes category) mark which path steps the route leans on.
   This is the resolved form of the old "Sort & Defend" option: **physician sorts, AM
-  asks.** "Loopt" is captured too — where it works is what Medical wants to share with
-  centres where it doesn't. Physical version: 5 path cards + 3 route cards + 3 zones on
+  asks.** Every sort state opens its own follow-up with its own AM line: knelt → what
+  pinches + what would help (barrier + wanted facilitator); loopt → how have you arranged
+  this (the WORKING facilitator — what Medical shares with centres where it pinches);
+  weet niet → who would know (not a dead end: the next person to talk to, usually the
+  nurse or pharmacist). Never treat "loopt" as a state to skip past. Physical version: 5 path cards + 3 route cards + 3 zones on
   the table. Never let this drift back into a questionnaire the AM fills in.
 - **Mode 2 — Patient case** (believers / advanced). A rich, coherent patient is dealt.
   Loop: patient → opening → explore → provisional approach → twist → does it hold.
@@ -102,7 +105,8 @@ Barriers live at two levels. Mode 1 maps **practice-level** barriers (capacity, 
 logistics, funding, follow-up — fixed for the practice). The profile carries
 **patient-level** barriers (appointment reliability, BMI, travel, needle fear). The SDM
 conversation is where they meet. If a scan was played this session, its pinch points
-appear at the case's **Approach** step (`practicePanel()`), each with a neutral
+appear at the case's **Approach** step (`practicePanel()`) — both what pinches AND
+what runs (symmetric: a practice strength is also a given the patient weighs) — each with a neutral
 "for the conversation" meaning (`SCAN[].m`). Framing is strict: a practice barrier is
 **an input the patient weighs, not a verdict on an option** — the prompt asks "is this
 a hurdle for THIS patient, or not?". Never let this become "so option X is unsuitable".
