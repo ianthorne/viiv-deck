@@ -3,299 +3,511 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Patient Pathways — prototype</title>
+<title>ViiV deck — prototype</title>
 <style>
   :root{
-    --paper:#ffffff; --ink:#000000; --muted:#6b6b6b; --line:#000000;
-    --card-w: 300px;
+    --paper:#ffffff; --ink:#000000; --muted:#6a6a6a; --soft:#c9c9c9; --wash:#f6f6f6;
+    --display:"Century Schoolbook","New Century Schoolbook","Century Schoolbook L",Georgia,"Times New Roman",serif;
+    --body:"Helvetica Neue",Helvetica,Arial,sans-serif;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--paper);color:var(--ink);
-    font-family:ui-sans-serif,system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
-    line-height:1.55;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:860px;margin:0 auto;padding:40px 24px 80px}
-  header{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:28px;
-    display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
-  h1{font-size:20px;font-weight:600;margin:0;letter-spacing:.01em}
-  .sub{font-size:13px;color:var(--muted);margin:2px 0 0}
-  .seg{font-size:12px;color:var(--muted);text-transform:none}
-  .rail{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 28px;font-size:11px;color:var(--muted)}
-  .rail span{border:1px solid var(--muted);padding:2px 8px;border-radius:0}
-  .rail span.on{border-color:var(--ink);color:var(--ink);font-weight:600}
-  .step{margin:0 0 8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-  h2{font-size:22px;font-weight:600;margin:0 0 6px;max-width:26ch}
-  p.lead{font-size:15px;color:#222;margin:0 0 22px;max-width:60ch}
-  /* card mirrors physical print spec 85x120mm */
-  .card{width:var(--card-w);aspect-ratio:85/120;border:1px solid var(--line);
-    padding:18px;position:relative;display:flex;flex-direction:column;background:var(--paper)}
+  html,body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+    font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:36px 24px 90px}
+  header{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;
+    border-bottom:1px solid var(--ink);padding-bottom:14px;margin-bottom:26px;flex-wrap:wrap}
+  .brand{font-family:var(--display);font-size:24px;line-height:1.1;margin:0;font-weight:400}
+  .brand small{display:block;font-family:var(--body);font-size:12px;color:var(--muted);margin-top:4px}
+  .ctl{display:flex;gap:14px;align-items:center;font-size:12px}
+  .seg-toggle{display:inline-flex;border:1px solid var(--ink)}
+  .seg-toggle button{border:none;padding:6px 12px;background:var(--paper);color:var(--ink);cursor:pointer;font:inherit;font-size:12px}
+  .seg-toggle button.on{background:var(--ink);color:var(--paper)}
+  .seg-toggle button:focus-visible{outline:2px solid var(--ink);outline-offset:-3px}
+
+  .rail{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 26px;font-size:11px;color:var(--muted)}
+  .rail span{border:1px solid var(--soft);padding:2px 9px}
+  .rail span.on{border-color:var(--ink);color:var(--ink)}
+  .rail span.done{border-color:var(--ink);color:var(--muted)}
+
+  .kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  h2{font-family:var(--display);font-size:28px;font-weight:400;line-height:1.15;margin:0 0 8px;max-width:24ch}
+  p.lead{font-size:16px;color:#1c1c1c;margin:0 0 22px;max-width:62ch}
+  .muted{color:var(--muted)}
+  .note{font-size:12.5px;color:var(--muted);margin-top:10px;max-width:62ch}
+
+  .modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:8px}
+  .mode{border:1px solid var(--ink);padding:22px 22px 18px;background:var(--paper);text-align:left;cursor:pointer;font:inherit;color:var(--ink);display:flex;flex-direction:column;gap:10px}
+  .mode:hover{background:var(--wash)}
+  .mode:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+  .mode.dashed{border-style:dashed}
+  .mode .name{font-family:var(--display);font-size:22px;line-height:1.15}
+  .mode .for{font-size:12px;color:var(--muted)}
+  .mode .desc{font-size:14px;color:#1c1c1c}
+  .mode .sym{width:28px;height:28px}
+
+  .cardwrap{display:grid;grid-template-columns:minmax(260px,320px) 1fr;gap:26px;align-items:start}
+  @media (max-width:720px){ .cardwrap{grid-template-columns:1fr} }
+  .card{aspect-ratio:85/120;border:1px solid var(--ink);padding:18px;position:relative;display:flex;flex-direction:column;background:var(--paper)}
   .card.dashed{border-style:dashed}
-  .card .tab{position:absolute;top:-1px;border:1px solid var(--line);border-bottom:none;
-    height:16px;width:34px;background:var(--paper)}
-  .card .sym{width:26px;height:26px;margin-bottom:12px}
-  .card .kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-  .card .name{font-size:19px;font-weight:600;margin-bottom:10px}
-  .card .ctx{font-size:13px;color:#222}
-  .card .placeholder{margin-top:auto;font-size:11px;color:var(--muted);border-top:1px dashed var(--muted);padding-top:8px}
-  textarea{width:100%;min-height:96px;border:1px solid var(--line);border-radius:0;
-    padding:10px 12px;font:inherit;font-size:14px;resize:vertical;background:var(--paper);color:var(--ink)}
-  textarea:focus{outline:2px solid var(--ink);outline-offset:1px}
-  .actions{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
-  button{font:inherit;font-size:14px;padding:9px 18px;border:1px solid var(--ink);
-    background:var(--paper);color:var(--ink);border-radius:0;cursor:pointer}
+  .card .tab{position:absolute;top:-1px;height:16px;width:36px;border:1px solid var(--ink);border-bottom:none;background:var(--paper)}
+  .card .sym{width:26px;height:26px;margin-bottom:10px}
+  .card .ck{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .card .nm{font-family:var(--display);font-size:22px;line-height:1.1;margin-bottom:4px}
+  .card .meta{font-size:12.5px;color:var(--muted);margin-bottom:12px}
+  .card .body{font-size:13px;color:#1c1c1c}
+  .card .ph{margin-top:auto;font-size:11px;color:var(--muted);border-top:1px dashed var(--soft);padding-top:8px}
+
+  .dossier{border-top:1px solid var(--ink)}
+  .dossier details{border-bottom:1px solid var(--soft)}
+  .dossier summary{cursor:pointer;padding:10px 0;font-size:13px;list-style:none;display:flex;justify-content:space-between}
+  .dossier summary::-webkit-details-marker{display:none}
+  .dossier summary::after{content:"+";color:var(--muted)}
+  .dossier details[open] summary::after{content:"\2013"}
+  .dossier .rows{padding:0 0 12px;font-size:13.5px}
+  .dossier .row{display:grid;grid-template-columns:150px 1fr;gap:12px;padding:3px 0}
+  .dossier .row b{font-weight:500;color:var(--muted)}
+  .dossier .flag{font-size:11px;color:var(--muted);border:1px dashed var(--soft);padding:2px 6px;display:inline-block;margin-top:6px}
+
+  .voice{border-left:2px solid var(--ink);padding:4px 0 4px 16px;margin:14px 0}
+  .voice .who{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+  .voice p{margin:0 0 6px;font-family:var(--display);font-size:17px;line-height:1.35}
+  .hidden-list{display:flex;flex-direction:column;gap:8px;margin:8px 0 4px}
+  .hf{border:1px dashed var(--ink);padding:10px 12px;display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+  .hf.rev{border-style:solid;background:var(--wash)}
+  .hf .txt{font-size:13.5px}
+  .hf .cue{font-size:11.5px;color:var(--muted);margin-top:3px}
+  .hf button{white-space:nowrap}
+
+  textarea{width:100%;min-height:92px;border:1px solid var(--ink);padding:10px 12px;font:inherit;font-size:14px;resize:vertical;background:var(--paper);color:var(--ink)}
+  textarea:focus-visible,input:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+  .actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;align-items:center}
+  button{font:inherit;font-size:14px;padding:9px 18px;border:1px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer}
   button.primary{background:var(--ink);color:var(--paper)}
-  button:disabled{opacity:.4;cursor:not-allowed}
   button.link{border:none;padding:9px 0;text-decoration:underline;background:none}
-  .choices{display:flex;flex-direction:column;gap:8px;margin:0 0 8px;max-width:60ch}
-  .choices label{border:1px solid var(--muted);padding:10px 12px;cursor:pointer;font-size:14px;display:flex;gap:10px;align-items:flex-start}
+  button.small{font-size:12px;padding:5px 10px}
+  button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .choices{display:flex;flex-direction:column;gap:8px;max-width:62ch}
+  .choices label{border:1px solid var(--soft);padding:10px 12px;cursor:pointer;display:flex;gap:10px;align-items:flex-start;font-size:14px}
   .choices label:hover{border-color:var(--ink)}
   .choices input{margin-top:3px}
-  .log{border-top:1px solid var(--line);margin-top:36px;padding-top:20px}
-  .log h3{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
-  .log .entry{border-left:2px solid var(--ink);padding:2px 0 2px 14px;margin:0 0 14px;font-size:14px}
-  .log .entry .q{color:var(--muted);font-size:12px;margin-bottom:2px}
-  .note{font-size:12px;color:var(--muted);margin-top:6px}
-  .err{color:#000;font-size:13px;border:1px solid #000;padding:6px 10px;margin-top:8px;display:none}
+  .err{display:none;font-size:13px;border:1px solid var(--ink);padding:6px 10px;margin-top:8px}
+
+  .bprompt{border:1px solid var(--ink);padding:16px 18px;margin-bottom:14px}
+  .bprompt .t{font-family:var(--display);font-size:19px;margin:0 0 4px}
+  .bprompt .s{font-size:13px;color:var(--muted);margin:0 0 10px}
+  .bprompt .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:720px){ .bprompt .two{grid-template-columns:1fr} }
+  .bprompt label{font-size:11.5px;color:var(--muted);display:block;margin-bottom:4px}
+  .bprompt textarea{min-height:70px}
+
+  .log{border-top:1px solid var(--ink);margin-top:30px;padding-top:18px}
+  .entry{border-left:2px solid var(--ink);padding:2px 0 2px 14px;margin:0 0 16px;font-size:14px}
+  .entry .q{color:var(--muted);font-size:12px;margin-bottom:3px}
+  .revealed{border:1px solid var(--soft);padding:10px 12px;margin-top:10px;font-size:13.5px;background:var(--wash)}
+  .revealed .ck{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div>
-      <h1>Patient Pathways</h1>
-      <p class="sub">Neutraal SDM- &amp; barrière-instrument · playtest-prototype</p>
+    <h1 class="brand">ViiV deck<small id="tag"></small></h1>
+    <div class="ctl">
+      <div class="seg-toggle" id="roleCtl" style="display:none"></div>
+      <div class="seg-toggle" id="langCtl"></div>
     </div>
-    <div class="seg" id="segLabel"></div>
   </header>
-
   <div class="rail" id="rail"></div>
   <div id="stage"></div>
 </div>
 
 <script>
-/* ---- data (placeholder, neutraal — geen klinische/product-claims) ---- */
+/* ============ i18n — UI strings ============ */
+const T = {
+  nl:{
+    tag:"Neutraal SDM- & barrière-instrument · speelbaar prototype",
+    role_doc:"Arts", role_fac:"Facilitator",
+    start_k:"Start", start_h:"Welk spel spelen we?",
+    start_lead:"Twee speelwijzen, één deck. Kies vooraf wat de sessie moet opleveren — zo blijft het gesprek op één doel.",
+    m1_name:"Behandelpad-scan", m1_for:"Voor sceptici en twijfelaars · geen patiënt",
+    m1_desc:"De arts is de expert over de eigen praktijk. Jullie brengen samen in kaart waar het behandelpad knelt: capaciteit, planning, logistiek, financiering. Uitkomst: een barrièrekaart.",
+    m2_name:"Patiëntcasus", m2_for:"Voor believers en gevorderden · met patiënt",
+    m2_desc:"De arts oefent een gesprek met een uitgedeelde, kloppende patiënt. Jij bent facilitator en de stem van de patiënt — sparringpartner, geen leraar. Uitkomst: reflectie plus de barrières die het gesprek blootlegt.",
+    start_note:"Klinische feiten in casussen zijn fictief en worden op plausibiliteit getoetst door Medical. Specificatie van middelen blijft leeg tot ViiV compliant tekst aanlevert.",
+    next:"Volgende", back:"Vorige", finish:"Afronden", newround:"Nieuwe ronde", home:"Terug naar start",
+    copy:"Kopieer barrièrekaart", copied:"Gekopieerd",
+    need_text:"Noteer eerst kort wat er boven tafel kwam.", need_choice:"Kies eerst een aanpak.",
+    step:"Stap",
+    m1_h:"Waar knelt het behandelpad?",
+    m1_lead:"Geen goed of fout. De arts vertelt hoe het in déze praktijk loopt; jij noteert wat knelt en wat zou helpen. Sla over wat niet speelt.",
+    m1_what:"Wat knelt hier?", m1_help:"Wat zou helpen?",
+    case_k:"De patiënt", case_h:"Je patiënt vandaag",
+    case_lead_doc:"Een uitgedeelde casus — een gegeven, geen puzzel. Lees het dossier zoals je een echt dossier zou lezen. Straks open je het gesprek.",
+    case_lead_fac:"Jij bent straks deze patiënt. Lees het dossier én de verborgen feiten: die geef je alleen prijs als de arts er open naar vraagt.",
+    open_k:"Openen", open_h:"Hoe open je het gesprek?",
+    open_lead_doc:"In je eigen woorden. Niet wat de patiënt moet, maar wat je wilt weten over hoe het leven nu loopt.",
+    open_lead_fac:"Laat de arts openen. Reageer als de patiënt — kort, natuurlijk. Onthul niets uit jezelf.",
+    open_q:"Je openingszin of -vraag",
+    explore_k:"Verkennen", explore_h:"Wat speelt er in het leven?",
+    explore_lead_doc:"Vraag door naar werk, ritme, reizen, relaties, wat de patiënt zelf belangrijk vindt. Wat naar boven komt, verschijnt hieronder.",
+    explore_lead_fac:"Onthul een verborgen feit alleen wanneer de arts er open naar vraagt. Niet gevraagd? Dan blijft het verborgen — dat is de oefening.",
+    explore_q:"Wat kwam er in het gesprek naar boven?",
+    surfaced:"Wat naar boven kwam", nothing_yet:"Nog niets — vraag naar het leven, niet naar de pil.",
+    reveal:"Onthul", revealed:"Onthuld",
+    plan_k:"Voorlopige aanpak", plan_h:"Hoe geef je het vervolg vorm?",
+    plan_lead:"Geen goed of fout — het gaat om de kwaliteit van het gesprek. Leg je aanpak vast; daarna verandert de context.",
+    plan_opts:[
+      "Ik verken eerst verder wat in het leven speelt voordat we over behandelopties praten.",
+      "Ik leg de opties naast wat de patiënt belangrijk vindt en laat de patiënt meewegen.",
+      "Ik houd de huidige aanpak aan en plan een vervolggesprek over wat naar boven kwam."
+    ],
+    twist_k:"Twist", twist_h:"De context verandert",
+    twist_lead_doc:"Onthuld ná je keuze. Nu pas zie je of je aanpak standhoudt.",
+    twist_lead_fac:"Lees de twist voor als de patiënt. Laat de arts erop reageren.",
+    hold_k:"Houdt het stand?", hold_h:"Houdt je aanpak stand?",
+    hold_lead:"Zo niet — wat blokkeert het in de praktijk? Dít is de barrière die je vastlegt. Van hieruit bouwt ViiV facilitators.",
+    hold_q:"Welke barrière legde de twist bloot?",
+    log_k:"Barrièrekaart · deze sessie", log_h:"Wat het spelen ophaalde",
+    log_lead:"Elke ronde — uit beide speelwijzen — levert barrièredata. Dit voedt wélke facilitators ViiV bouwt: de brug van diagnose naar activeren.",
+    log_none:"Nog niets vastgelegd.", round:"Ronde", twist_lbl:"Twist", surfaced_lbl:"Naar boven gekomen",
+    d_demo:"Demografie", d_med:"Medisch beeld", d_care:"Zorggebruik", d_life:"Leefstijl", d_prio:"Wat de patiënt belangrijk vindt",
+    d_flag:"Casusfeiten · fictief · plausibiliteit te toetsen door Medical", d_reg:"Specificatie huidige middel: [ViiV — in afwachting]",
+    hidden_k:"Verborgen feiten — alleen als gevraagd", cue:"Komt los bij:",
+    m1_steps:["Capaciteit","Planning","Logistiek","Financiering","Opvolging","Afronden"],
+    m2_steps:["Patiënt","Openen","Verkennen","Aanpak","Twist","Houdt het stand?"]
+  },
+  en:{
+    tag:"Neutral SDM & barrier instrument · playable prototype",
+    role_doc:"Physician", role_fac:"Facilitator",
+    start_k:"Start", start_h:"Which game are we playing?",
+    start_lead:"Two ways to play, one deck. Choose upfront what the session should produce — it keeps the conversation on a single purpose.",
+    m1_name:"Treatment-path scan", m1_for:"For sceptics and the undecided · no patient",
+    m1_desc:"The physician is the expert on their own practice. Together you map where the treatment path pinches: capacity, scheduling, logistics, funding. Output: a barrier map.",
+    m2_name:"Patient case", m2_for:"For believers and advanced users · with a patient",
+    m2_desc:"The physician practises a conversation with a dealt, coherent patient. You are facilitator and the patient's voice — a sparring partner, not a teacher. Output: reflection plus the barriers the conversation surfaces.",
+    start_note:"Clinical facts in cases are fictional and checked for plausibility by Medical. Product specifics stay empty until ViiV supplies compliant copy.",
+    next:"Next", back:"Back", finish:"Finish", newround:"New round", home:"Back to start",
+    copy:"Copy barrier map", copied:"Copied",
+    need_text:"First note briefly what came up.", need_choice:"Choose an approach first.",
+    step:"Step",
+    m1_h:"Where does the treatment path pinch?",
+    m1_lead:"No right or wrong. The physician describes how it runs in this practice; you note what pinches and what would help. Skip what doesn't apply.",
+    m1_what:"What pinches here?", m1_help:"What would help?",
+    case_k:"The patient", case_h:"Your patient today",
+    case_lead_doc:"A dealt case — a given, not a puzzle. Read the file as you would a real one. In a moment you open the conversation.",
+    case_lead_fac:"You will be this patient. Read the file and the hidden facts: give those away only when the physician asks openly.",
+    open_k:"Opening", open_h:"How do you open the conversation?",
+    open_lead_doc:"In your own words. Not what the patient should do, but what you want to know about how life is going right now.",
+    open_lead_fac:"Let the physician open. Respond as the patient — brief, natural. Reveal nothing unprompted.",
+    open_q:"Your opening line or question",
+    explore_k:"Explore", explore_h:"What's going on in their life?",
+    explore_lead_doc:"Ask about work, rhythm, travel, relationships, what the patient values. Whatever surfaces appears below.",
+    explore_lead_fac:"Reveal a hidden fact only when the physician asks openly. Not asked? It stays hidden — that is the exercise.",
+    explore_q:"What came up in the conversation?",
+    surfaced:"What surfaced", nothing_yet:"Nothing yet — ask about life, not the pill.",
+    reveal:"Reveal", revealed:"Revealed",
+    plan_k:"Provisional approach", plan_h:"How do you shape what comes next?",
+    plan_lead:"No right or wrong — this is about the quality of the conversation. Commit to an approach; then the context shifts.",
+    plan_opts:[
+      "I explore further what's going on in life before we discuss treatment options.",
+      "I set the options next to what the patient values and let them weigh in.",
+      "I keep the current approach and plan a follow-up about what came up."
+    ],
+    twist_k:"Twist", twist_h:"The context shifts",
+    twist_lead_doc:"Revealed after your choice. Only now do you see whether your approach holds.",
+    twist_lead_fac:"Read the twist out as the patient. Let the physician respond.",
+    hold_k:"Does it hold?", hold_h:"Does your approach hold?",
+    hold_lead:"If not — what blocks it in practice? This is the barrier you capture. From here, ViiV builds facilitators.",
+    hold_q:"Which barrier did the twist expose?",
+    log_k:"Barrier map · this session", log_h:"What playing surfaced",
+    log_lead:"Every round — from either mode — yields barrier data. This feeds which facilitators ViiV builds: the bridge from diagnosis to activation.",
+    log_none:"Nothing captured yet.", round:"Round", twist_lbl:"Twist", surfaced_lbl:"Surfaced",
+    d_demo:"Demographics", d_med:"Medical picture", d_care:"Care use", d_life:"Lifestyle", d_prio:"What the patient values",
+    d_flag:"Case facts · fictional · plausibility to be checked by Medical", d_reg:"Current regimen specifics: [ViiV — pending]",
+    hidden_k:"Hidden facts — only if asked", cue:"Surfaces when asked about:",
+    m1_steps:["Capacity","Scheduling","Logistics","Funding","Follow-up","Finish"],
+    m2_steps:["Patient","Opening","Explore","Approach","Twist","Does it hold?"]
+  }
+};
+
+/* ============ Content — bilingual, neutral case facts, no product claims ============ */
 const PROFILES = [
-  {name:"Gabriel", tab:1, dashed:false, sym:"circle",
-   ctx:"Werkt in onregelmatige ploegendiensten. Reist een paar keer per jaar voor familie. Gesprek loopt nu vooral over virale onderdrukking, minder over het leven eromheen."},
-  {name:"Karen", tab:2, dashed:true, sym:"triangle",
-   ctx:"Mantelzorger met een volle agenda. Komt liever niet vaak naar het behandelcentrum. Stabiel ingesteld, ziet de kliniek doorgaans twee keer per jaar."}
+ { id:"gabriel", tab:"left", style:"", sym:"circle", name:"Gabriel",
+   meta:{nl:"34 · man · logistiek, ploegendienst", en:"34 · male · logistics, shift work"},
+   demo:{nl:[["Leeftijd","34"],["Woont","met partner"],["Werk","logistiek, wisselende ploegen incl. nachtdienst"],["Afstand centrum","± 40 min"]],
+         en:[["Age","34"],["Lives","with partner"],["Work","logistics, rotating shifts incl. nights"],["Distance to clinic","± 40 min"]]},
+   med:{nl:[["Diagnose","2019"],["Huidig","dagelijkse orale combinatietablet"],["Onderdrukt sinds","2020"],["BMI","24"],["Genotype","bekend, geen relevante resistentie"],["Comorbiditeit","geen"],["Overige medicatie","geen"]],
+        en:[["Diagnosis","2019"],["Current","daily oral single-tablet regimen"],["Suppressed since","2020"],["BMI","24"],["Genotype","known, no relevant resistance"],["Comorbidity","none"],["Other medication","none"]]},
+   care:{nl:[["Afspraaktrouw","goed; 1 gemiste controle vorig jaar"],["Bezoekfrequentie","2× per jaar"]],
+         en:[["Appointment reliability","good; 1 missed check-up last year"],["Visit frequency","2× per year"]]},
+   life:{nl:[["Ritme","onregelmatig door diensten"],["Reizen","2–3× per jaar naar familie in het buitenland, 3–4 weken"],["Sociaal","sport, drinkt sociaal"]],
+         en:[["Rhythm","irregular due to shifts"],["Travel","2–3× a year to family abroad, 3–4 weeks"],["Social","sports, drinks socially"]]},
+   prio:{nl:"Wil dat werk en reizen geen last hebben van de behandeling. Discretie op het werk is belangrijk.",
+         en:"Wants work and travel unaffected by treatment. Discretion at work matters."},
+   hidden:[
+     {nl:"Vergeet de pil soms in nachtdienstweken.", en:"Sometimes forgets the pill in night-shift weeks.", cue:{nl:"werkritme / diensten", en:"work rhythm / shifts"}},
+     {nl:"Heeft de partner nog niet volledig verteld over de medicatieroutine.", en:"Hasn't fully told the partner about the medication routine.", cue:{nl:"relatie / thuis", en:"relationship / home"}},
+     {nl:"Maakt zich zorgen wat een reis van meer dan vier weken betekent.", en:"Worries what a trip of more than four weeks would mean.", cue:{nl:"reizen", en:"travel"}}
+   ]
+ },
+ { id:"karen", tab:"right", style:"dashed", sym:"triangle", name:"Karen",
+   meta:{nl:"52 · vrouw · mantelzorger, parttime administratief", en:"52 · female · carer, part-time admin"},
+   demo:{nl:[["Leeftijd","52"],["Woont","alleen; mantelzorger voor moeder"],["Werk","parttime administratief"],["Afstand centrum","± 15 min"]],
+         en:[["Age","52"],["Lives","alone; carer for her mother"],["Work","part-time administrative"],["Distance to clinic","± 15 min"]]},
+   med:{nl:[["Diagnose","2008"],["Huidig","dagelijkse orale combinatietablet"],["Onderdrukt sinds","2009"],["BMI","31"],["Genotype","uit 2008 — oud / onvolledig"],["Comorbiditeit","hypertensie, verhoogd cholesterol"],["Overige medicatie","2 middelen"]],
+        en:[["Diagnosis","2008"],["Current","daily oral single-tablet regimen"],["Suppressed since","2009"],["BMI","31"],["Genotype","from 2008 — old / incomplete"],["Comorbidity","hypertension, raised cholesterol"],["Other medication","2 agents"]]},
+   care:{nl:[["Afspraaktrouw","zeer goed"],["Bezoekfrequentie","2× per jaar; wil niet vaker"]],
+         en:[["Appointment reliability","very good"],["Visit frequency","2× per year; doesn't want more"]]},
+   life:{nl:[["Ritme","drukke zorgtaken, weinig eigen tijd"],["Slaap","slecht"],["Reizen","niet"]],
+         en:[["Rhythm","heavy care duties, little time of her own"],["Sleep","poor"],["Travel","none"]]},
+   prio:{nl:"Zo min mogelijk gedoe. \u201cHet loopt goed, verander niets.\u201d Eigen gezondheid komt op de tweede plaats.",
+         en:"As little hassle as possible. \u201cIt's going fine, change nothing.\u201d Her own health comes second."},
+   hidden:[
+     {nl:"Vergat de pil tijdens de ziekenhuisopname van haar moeder.", en:"Forgot the pill during her mother's hospital admission.", cue:{nl:"zorgtaken / belasting", en:"care duties / strain"}},
+     {nl:"Heeft angst voor naalden.", en:"Is afraid of needles.", cue:{nl:"eerdere ervaringen / wat ze niet wil", en:"past experiences / what she doesn't want"}},
+     {nl:"Voelt zich soms \u201calleen maar patiënt\u201d.", en:"Sometimes feels like \u201cnothing but a patient\u201d.", cue:{nl:"hoe ze zich voelt", en:"how she feels"}}
+   ]
+ }
 ];
+
 const TWISTS = [
-  "Nieuwe baan met vaste kantoortijden — verandert dat de mogelijkheden?",
-  "Verhuizing naar een regio verder van het behandelcentrum.",
-  "Langere reis naar het buitenland gepland.",
-  "Toegenomen behoefte aan discretie op het werk."
+  {nl:"Nieuwe baan met vaste kantoortijden — verandert dat de mogelijkheden?", en:"New job with fixed office hours — does that change the options?"},
+  {nl:"Verhuizing naar een regio verder van het behandelcentrum.", en:"Moving to a region further from the treatment centre."},
+  {nl:"Een reis van zes weken naar het buitenland gepland.", en:"A six-week trip abroad planned."},
+  {nl:"Toegenomen behoefte aan discretie op het werk.", en:"Increased need for discretion at work."},
+  {nl:"Een nieuwe partner die nog niets weet van de diagnose.", en:"A new partner who doesn't yet know about the diagnosis."}
 ];
-const SYMS = {
+
+const SCAN = [
+  {k:"cap", t:{nl:"Capaciteit & personeel", en:"Capacity & staffing"},
+   s:{nl:"Wie doet wat in het behandelpad? Is er verpleegkundige capaciteit, ruimte en tijd voor extra contactmomenten?", en:"Who does what along the path? Is there nursing capacity, space and time for additional contact moments?"}},
+  {k:"sch", t:{nl:"Planning & venster", en:"Scheduling & window"},
+   s:{nl:"Hoe zouden strakkere afspraakvensters passen in de huidige planning? Wat gebeurt er bij een gemiste afspraak?", en:"How would tighter appointment windows fit current scheduling? What happens on a missed appointment?"}},
+  {k:"log", t:{nl:"Logistiek & opslag", en:"Logistics & storage"},
+   s:{nl:"Koeling, voorraad, apotheek, thuisbezorging — waar loopt de keten vast?", en:"Refrigeration, stock, pharmacy, home delivery — where does the chain jam?"}},
+  {k:"fin", t:{nl:"Financiering & VoReZorg", en:"Funding & VoReZorg"},
+   s:{nl:"Wie draagt de kosten van extra bezoeken, toediening en thuiszorg? Welke route is haalbaar in deze praktijk?", en:"Who carries the cost of extra visits, administration and home care? Which route is workable in this practice?"}},
+  {k:"fup", t:{nl:"Opvolging", en:"Follow-up"},
+   s:{nl:"Hoe worden patiënten opgevolgd die niet reageren of afspraken missen? Wie belt, wie bewaakt?", en:"How are non-responding or no-show patients followed up? Who calls, who monitors?"}}
+];
+
+const SYM = {
   circle:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#000" stroke-width="1.3"><circle cx="13" cy="13" r="9"/></svg>',
-  triangle:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#000" stroke-width="1.3"><path d="M13 4 L22 21 L4 21 Z"/></svg>'
+  triangle:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#000" stroke-width="1.3"><path d="M13 4 L22 21 L4 21 Z"/></svg>',
+  cross:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#000" stroke-width="1.3"><path d="M6 6 L20 20 M20 6 L6 20"/></svg>',
+  grid:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#000" stroke-width="1.3"><rect x="5" y="5" width="16" height="16"/><path d="M5 13 H21 M13 5 V21"/></svg>'
 };
 
-/* step definitions keyed by id; segment controls order (same loop, andere nadruk) */
-const STEPS = {
-  case:        {label:"Casus", kind:"case"},
-  barrieres:   {label:"Behandelpad & barrières", kind:"capture",
-                lead:"Hoe ziet het behandelpad hier eruit — en waar loopt de arts of verpleegkundige tegenaan? Denk aan capaciteit, planning en logistiek. Geen goed of fout; je verzamelt wat knelt.",
-                q:"Welke barrière kwam boven tafel?"},
-  artswaarden: {label:"Artswaarden", kind:"capture",
-                lead:"Wat weegt voor deze arts het zwaarst — effectiviteit, gemak, of de kwaliteit van leven van de patiënt? Peil het, oordeel niet.",
-                q:"Wat vindt deze arts het belangrijkst?"},
-  patientcasus:{label:"Patiëntcasus & gesprek", kind:"capture",
-                lead:"Voer het SDM-gesprek. Vraag niet naar de pil, maar naar het leven: wat speelt er dat de behandeling raakt? De keuze komt zo — dit is het gesprek.",
-                q:"Wat kwam er in het gesprek naar boven?"},
-  keuze:       {label:"Voorlopige keuze", kind:"choice"},
-  twist:       {label:"Twist", kind:"twist"},
-  standhouden: {label:"Houdt het stand?", kind:"capture",
-                lead:"Houdt je aanpak stand nu deze context erbij komt? Zo niet — wat blokkeert het in de praktijk? Dít is de barrière die je vastlegt.",
-                q:"Welke barrière legde de twist bloot?"}
-};
-const ORDER = {
-  scepticus: ["case","barrieres","artswaarden","patientcasus","keuze","twist","standhouden"],
-  believer:  ["case","patientcasus","artswaarden","barrieres","keuze","twist","standhouden"]
-};
+/* ============ State ============ */
+let S = { lang:"nl", mode:null, role:"doc", i:0, profile:null, twist:null, revealed:[], caps:{}, log:[] };
+const t = k => T[S.lang][k];
+const L = o => (o && typeof o==="object" && !Array.isArray(o) && ("nl" in o)) ? (o[S.lang] ?? o.nl) : o;
 
-let state = null;
-
-function newRound(segment){
-  const profile = PROFILES[Math.floor(Math.random()*PROFILES.length)];
-  const twist   = TWISTS[Math.floor(Math.random()*TWISTS.length)];
-  state = {screen:"round", segment, order:ORDER[segment], i:0,
-           profile, twist, captures:[], log: state ? state.log : []};
+function setLang(l){ S.lang=l; document.documentElement.lang=l; render(); }
+function setRole(r){ S.role=r; render(); }
+function start(mode){
+  S.mode=mode; S.i=0; S.revealed=[]; S.caps={};
+  if(mode==="m2"){
+    S.profile = PROFILES[Math.floor(Math.random()*PROFILES.length)];
+    S.twist   = TWISTS[Math.floor(Math.random()*TWISTS.length)];
+    S.role="doc";
+  }
   render();
 }
+function home(){ S.mode=null; S.i=0; render(); }
 
-/* ---------- screens ---------- */
+/* ============ Render ============ */
 function render(){
-  const seg = document.getElementById("segLabel");
-  const rail = document.getElementById("rail");
-  const stage = document.getElementById("stage");
+  document.getElementById("tag").textContent = t("tag");
+  document.getElementById("langCtl").innerHTML = ["nl","en"].map(l=>
+    `<button class="${S.lang===l?'on':''}" onclick="setLang('${l}')" aria-pressed="${S.lang===l}">${l.toUpperCase()}</button>`).join("");
+  const rc = document.getElementById("roleCtl");
+  if(S.mode==="m2"){
+    rc.style.display="inline-flex";
+    rc.innerHTML = [["doc",t("role_doc")],["fac",t("role_fac")]].map(([r,lbl])=>
+      `<button class="${S.role===r?'on':''}" onclick="setRole('${r}')" aria-pressed="${S.role===r}">${lbl}</button>`).join("");
+  } else rc.style.display="none";
 
-  if(!state){ // intro
-    seg.textContent = "";
-    rail.innerHTML = "";
-    stage.innerHTML = `
-      <div class="step">Start</div>
-      <h2>Kies het instappunt</h2>
-      <p class="lead">Eén adaptieve deck, geen twee spellen. De scepticus start bij het
-        behandelpad en de barrières; de believer schuift sneller door naar de patiëntcasus.
-        Zelfde loop, andere nadruk.</p>
-      <div class="actions">
-        <button class="primary" onclick="newRound('scepticus')">Sceptische / barrière-route</button>
-        <button onclick="newRound('believer')">Believer / SDM-route</button>
-      </div>
-      <p class="note">Demo-module voor de Cycle Meeting. Klinische en productinhoud is
-        bewust placeholder, in afwachting van door ViiV aangeleverde, compliance-getoetste tekst.</p>`;
-    return;
-  }
-
-  seg.textContent = state.segment === "scepticus" ? "Sceptische / barrière-route" : "Believer / SDM-route";
-  const key = state.order[state.i];
-  const step = STEPS[key];
-
-  rail.innerHTML = state.order.map((k,idx)=>
-    `<span class="${idx===state.i?'on':''}">${STEPS[k].label}</span>`).join("");
-
-  const stepNo = `Stap ${state.i+1} / ${state.order.length}`;
-
-  if(step.kind === "case"){
-    const p = state.profile;
-    stage.innerHTML = `
-      <div class="step">${stepNo} · ${step.label}</div>
-      <h2>De casus wordt uitgedeeld</h2>
-      <p class="lead">Een gecureerd, kloppend basisprofiel — een gegeven, geen bouwopdracht.
-        Je lost de patiënt niet op; je voert het gesprek eromheen.</p>
-      <div class="card ${p.dashed?'dashed':''}">
-        <div class="tab" style="${p.tab===1?'left:18px':'right:18px'}"></div>
-        ${SYMS[p.sym]}
-        <div class="kicker">Patiënt-basisprofiel</div>
-        <div class="name">${p.name}</div>
-        <div class="ctx">${p.ctx}</div>
-        <div class="placeholder">Comorbiditeit &amp; medicatie: [ViiV-aangeleverd — in afwachting]</div>
-      </div>
-      ${nav(true)}`;
-  }
-  else if(step.kind === "capture"){
-    stage.innerHTML = `
-      <div class="step">${stepNo} · ${step.label}</div>
-      <h2>${step.label}</h2>
-      <p class="lead">${step.lead}</p>
-      <textarea id="cap" placeholder="${step.q}">${existing(key)}</textarea>
-      <div class="err" id="err">Noteer eerst kort wat er boven tafel kwam.</div>
-      ${nav(true, ()=>true, key)}`;
-  }
-  else if(step.kind === "choice"){
-    const opts = [
-      "Ik open het gesprek over wat er in het leven speelt vóór ik over behandeling begin.",
-      "Ik breng eerst het behandelpad en de praktische kaders in kaart.",
-      "Ik peil eerst wat de arts zelf het zwaarst vindt wegen."
-    ];
-    stage.innerHTML = `
-      <div class="step">${stepNo} · ${step.label}</div>
-      <h2>Hoe geef je het gesprek vorm?</h2>
-      <p class="lead">Geen goed of fout — het gaat om de kwaliteit van het gesprek.
-        Leg je aanpak vast; zo dadelijk komt de twist.</p>
-      <div class="choices">
-        ${opts.map((o,idx)=>`<label><input type="radio" name="keuze" value="${o}"
-           ${existing('keuze')===o?'checked':''}> <span>${o}</span></label>`).join("")}
-      </div>
-      <div class="err" id="err">Kies eerst een aanpak.</div>
-      ${nav(true, ()=>true, 'keuze')}`;
-  }
-  else if(step.kind === "twist"){
-    stage.innerHTML = `
-      <div class="step">${stepNo} · ${step.label}</div>
-      <h2>Twist — onthuld ná je keuze</h2>
-      <p class="lead">De context verandert. Nu pas zie je of je keuze standhoudt.</p>
-      <div class="card dashed">
-        <div class="tab" style="right:18px"></div>
-        <svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#000" stroke-width="1.3"><path d="M4 13 L22 13 M13 4 L13 22" transform="rotate(45 13 13)"/></svg>
-        <div class="kicker">Life-event</div>
-        <div class="ctx" style="font-size:15px">${state.twist}</div>
-      </div>
-      ${nav(true)}`;
-  }
-
-  // finish handled inside nav()
+  const rail=document.getElementById("rail"), stage=document.getElementById("stage");
+  if(!S.mode){ rail.innerHTML=""; stage.innerHTML=startScreen(); return; }
+  if(S.mode==="log"){ rail.innerHTML=""; stage.innerHTML=logScreen(); return; }
+  const steps = S.mode==="m1" ? t("m1_steps") : t("m2_steps");
+  rail.innerHTML = steps.map((s,idx)=>`<span class="${idx===S.i?'on':idx<S.i?'done':''}">${s}</span>`).join("");
+  stage.innerHTML = S.mode==="m1" ? mode1() : mode2();
 }
 
-function existing(key){ const e = state.captures.find(c=>c.key===key); return e?e.value.replace(/"/g,'&quot;'):""; }
+function startScreen(){
+  return `
+    <div class="kicker">${t("start_k")}</div>
+    <h2>${t("start_h")}</h2>
+    <p class="lead">${t("start_lead")}</p>
+    <div class="modes">
+      <button class="mode" onclick="start('m1')">${SYM.grid}<div class="name">${t("m1_name")}</div><div class="for">${t("m1_for")}</div><div class="desc">${t("m1_desc")}</div></button>
+      <button class="mode dashed" onclick="start('m2')">${SYM.circle}<div class="name">${t("m2_name")}</div><div class="for">${t("m2_for")}</div><div class="desc">${t("m2_desc")}</div></button>
+    </div>
+    <p class="note">${t("start_note")}</p>`;
+}
 
-function nav(showBack){
-  const last = state.i === state.order.length-1;
+/* ---- Mode 1: treatment-path scan ---- */
+function mode1(){
+  const total = SCAN.length+1;
+  if(S.i === SCAN.length){
+    return `<div class="kicker">${t("step")} ${S.i+1} / ${total}</div><h2>${t("finish")}</h2><p class="lead">${t("log_lead")}</p>${nav()}`;
+  }
+  const p = SCAN[S.i], w = S.caps[p.k+"_w"]||"", h = S.caps[p.k+"_h"]||"";
+  return `
+    <div class="kicker">${t("step")} ${S.i+1} / ${total}</div>
+    <h2>${t("m1_h")}</h2>
+    <p class="lead">${t("m1_lead")}</p>
+    <div class="bprompt">
+      <p class="t">${L(p.t)}</p><p class="s">${L(p.s)}</p>
+      <div class="two">
+        <div><label>${t("m1_what")}</label><textarea id="w">${esc(w)}</textarea></div>
+        <div><label>${t("m1_help")}</label><textarea id="h">${esc(h)}</textarea></div>
+      </div>
+    </div>
+    ${nav()}`;
+}
+
+/* ---- Mode 2: patient case ---- */
+function mode2(){
+  const P = S.profile, doc = S.role==="doc", n = t("m2_steps").length;
+  const head = (k,h) => `<div class="kicker">${t("step")} ${S.i+1} / ${n} · ${t(k)}</div><h2>${t(h)}</h2>`;
+  if(S.i===0) return `
+      ${head("case_k","case_h")}
+      <p class="lead">${doc?t("case_lead_doc"):t("case_lead_fac")}</p>
+      <div class="cardwrap">${card(P)}<div>${dossier(P)}${doc?"":hiddenPanel(P,false)}</div></div>
+      ${nav()}`;
+  if(S.i===1) return `
+      ${head("open_k","open_h")}
+      <p class="lead">${doc?t("open_lead_doc"):t("open_lead_fac")}</p>
+      ${doc ? `<textarea id="cap" placeholder="${t("open_q")}">${esc(S.caps.open||"")}</textarea><div class="err" id="err">${t("need_text")}</div>` : voice(P, L(P.prio))}
+      ${nav()}`;
+  if(S.i===2) return `
+      ${head("explore_k","explore_h")}
+      <p class="lead">${doc?t("explore_lead_doc"):t("explore_lead_fac")}</p>
+      ${doc ? surfacedPanel(P)+`<textarea id="cap" placeholder="${t("explore_q")}" style="margin-top:14px">${esc(S.caps.explore||"")}</textarea><div class="err" id="err">${t("need_text")}</div>` : hiddenPanel(P,true)}
+      ${nav()}`;
+  if(S.i===3){ const opts=t("plan_opts"); return `
+      ${head("plan_k","plan_h")}
+      <p class="lead">${t("plan_lead")}</p>
+      <div class="choices">${opts.map(o=>`<label><input type="radio" name="plan" value="${esc(o)}" ${S.caps.plan===o?'checked':''}> <span>${o}</span></label>`).join("")}</div>
+      <div class="err" id="err">${t("need_choice")}</div>
+      ${nav()}`; }
+  if(S.i===4) return `
+      ${head("twist_k","twist_h")}
+      <p class="lead">${doc?t("twist_lead_doc"):t("twist_lead_fac")}</p>
+      <div class="cardwrap"><div class="card dashed"><div class="tab" style="right:18px"></div>${SYM.cross}
+        <div class="ck">Life-event</div><div class="body" style="font-family:var(--display);font-size:17px;line-height:1.35">${L(S.twist)}</div></div></div>
+      ${nav()}`;
+  return `
+      ${head("hold_k","hold_h")}
+      <p class="lead">${t("hold_lead")}</p>
+      <textarea id="cap" placeholder="${t("hold_q")}">${esc(S.caps.hold||"")}</textarea><div class="err" id="err">${t("need_text")}</div>
+      ${nav()}`;
+}
+
+/* ---- components ---- */
+function card(P){
+  return `<div class="card ${P.style}">
+    <div class="tab" style="${P.tab==='left'?'left:18px':'right:18px'}"></div>${SYM[P.sym]}
+    <div class="ck">${t("case_k")}</div><div class="nm">${P.name}</div><div class="meta">${L(P.meta)}</div>
+    <div class="body">${L(P.prio)}</div>
+    <div class="ph">${t("d_reg")}</div></div>`;
+}
+function rows(list){ return `<div class="rows">${list.map(([k,v])=>`<div class="row"><b>${k}</b><span>${v}</span></div>`).join("")}</div>`; }
+function dossier(P){
+  const sec=(lbl,list,open)=>`<details ${open?'open':''}><summary>${lbl}</summary>${rows(L(list))}</details>`;
+  return `<div class="dossier">
+    ${sec(t("d_demo"),P.demo,true)}${sec(t("d_med"),P.med,true)}${sec(t("d_care"),P.care,false)}${sec(t("d_life"),P.life,false)}
+    <details><summary>${t("d_prio")}</summary><div class="rows"><p style="margin:0">${L(P.prio)}</p></div></details>
+    <div class="flag">${t("d_flag")}</div></div>`;
+}
+function voice(P,line){ return `<div class="voice"><div class="who">${P.name}</div><p>\u201c${line}\u201d</p></div>`; }
+function hiddenPanel(P,interactive){
+  return `<div style="margin-top:16px"><div class="kicker">${t("hidden_k")}</div><div class="hidden-list">
+    ${P.hidden.map((h,idx)=>{ const r=S.revealed.includes(idx); return `<div class="hf ${r?'rev':''}">
+      <div><div class="txt">${L(h)}</div><div class="cue">${t("cue")} ${L(h.cue)}</div></div>
+      ${interactive?`<button class="small" onclick="revealFact(${idx})" ${r?'disabled':''}>${r?t("revealed"):t("reveal")}</button>`:""}
+    </div>`;}).join("")}</div></div>`;
+}
+function surfacedPanel(P){
+  const items = S.revealed.map(idx=>L(P.hidden[idx]));
+  return `<div class="revealed"><div class="ck">${t("surfaced")}</div>
+    ${items.length?items.map(x=>`<div>— ${x}</div>`).join(""):`<span class="muted">${t("nothing_yet")}</span>`}</div>`;
+}
+function revealFact(idx){ if(!S.revealed.includes(idx)) S.revealed.push(idx); render(); }
+
+function nav(){
+  const total = S.mode==="m1" ? SCAN.length+1 : t("m2_steps").length;
+  const last = S.i===total-1;
   return `<div class="actions">
-    ${state.i>0?'<button onclick="back()">Vorige</button>':''}
-    <button class="primary" onclick="next()">${last?'Ronde afronden':'Volgende'}</button>
-    <button class="link" onclick="reset()">Opnieuw</button>
-  </div>`;
+    ${S.i>0?`<button onclick="back()">${t("back")}</button>`:""}
+    <button class="primary" onclick="next()">${last?t("finish"):t("next")}</button>
+    <button class="link" onclick="home()">${t("home")}</button></div>`;
 }
 
+/* ---- flow ---- */
+const val  = id => (document.getElementById(id)||{value:""}).value.trim();
+const show = el => { if(el) el.style.display="block"; };
 function collect(){
-  const key = state.order[state.i];
-  const step = STEPS[key];
-  const err = document.getElementById("err");
-  if(step.kind==="capture"){
-    const v = document.getElementById("cap").value.trim();
-    if(!v){ if(err) err.style.display="block"; return false; }
-    upsert(key, STEPS[key].label, v);
+  const err=document.getElementById("err");
+  if(S.mode==="m1"){
+    if(S.i<SCAN.length){ const p=SCAN[S.i]; S.caps[p.k+"_w"]=val("w"); S.caps[p.k+"_h"]=val("h"); }
+    return true;
   }
-  if(step.kind==="choice"){
-    const sel = document.querySelector('input[name="keuze"]:checked');
-    if(!sel){ if(err) err.style.display="block"; return false; }
-    upsert('keuze', 'Voorlopige keuze', sel.value);
-  }
+  const doc=S.role==="doc";
+  if(S.i===1 && doc){ const v=val("cap"); if(!v){show(err);return false;} S.caps.open=v; }
+  if(S.i===2 && doc){ const v=val("cap"); if(!v){show(err);return false;} S.caps.explore=v; }
+  if(S.i===3){ const sel=document.querySelector('input[name="plan"]:checked'); if(!sel){show(err);return false;} S.caps.plan=sel.value; }
+  if(S.i===5){ const v=val("cap"); if(!v){show(err);return false;} S.caps.hold=v; }
   return true;
 }
-function upsert(key,label,value){
-  const e = state.captures.find(c=>c.key===key);
-  if(e){ e.value=value; } else { state.captures.push({key,label,value}); }
-}
-
 function next(){
   if(!collect()) return;
-  if(state.i < state.order.length-1){ state.i++; render(); }
-  else finishRound();
+  const total = S.mode==="m1" ? SCAN.length+1 : t("m2_steps").length;
+  if(S.i<total-1){ S.i++; render(); } else finish();
 }
-function back(){ collect(); state.i--; render(); }
-function reset(){ state=null; render(); }
+function back(){ collect(); S.i--; render(); }
 
-function finishRound(){
-  const entry = {segment:state.segment, profile:state.profile.name, twist:state.twist,
-                 captures:[...state.captures]};
-  state.log.unshift(entry);
-  renderLog();
+function finish(){
+  const e = {mode:S.mode, items:[]};
+  if(S.mode==="m1"){
+    e.title = t("m1_name");
+    SCAN.forEach(p=>{ const w=S.caps[p.k+"_w"], h=S.caps[p.k+"_h"]; if(w||h) e.items.push({k:L(p.t), w, h}); });
+  } else {
+    e.title = `${t("m2_name")} · ${S.profile.name}`;
+    e.twist = L(S.twist);
+    e.surfaced = S.revealed.map(i=>L(S.profile.hidden[i]));
+    [["open",t("open_k")],["explore",t("explore_k")],["plan",t("plan_k")],["hold",t("hold_k")]].forEach(([k,lbl])=>{ if(S.caps[k]) e.items.push({k:lbl, w:S.caps[k]}); });
+  }
+  S.log.unshift(e); S.mode="log"; render();
 }
 
-function renderLog(){
-  const rail = document.getElementById("rail"); rail.innerHTML="";
-  const stage = document.getElementById("stage");
-  const rounds = state.log.map((r,idx)=>`
-    <div class="entry">
-      <div class="q">Ronde ${state.log.length-idx} · ${r.segment} · ${r.profile}</div>
-      ${r.captures.map(c=>`<div><strong>${c.label}:</strong> ${escapeHtml(c.value)}</div>`).join("")}
-      <div class="q" style="margin-top:6px">Twist: ${escapeHtml(r.twist)}</div>
+function logScreen(){
+  const n=S.log.length;
+  const body = S.log.map((r,idx)=>`<div class="entry">
+      <div class="q">${t("round")} ${n-idx} · ${r.title}</div>
+      ${r.items.map(it=>`<div><strong>${it.k}:</strong> ${esc(it.w||"")}${it.h?` <span class="muted">→ ${esc(it.h)}</span>`:""}</div>`).join("")}
+      ${r.surfaced&&r.surfaced.length?`<div class="q" style="margin-top:6px">${t("surfaced_lbl")}: ${r.surfaced.map(esc).join(" · ")}</div>`:""}
+      ${r.twist?`<div class="q">${t("twist_lbl")}: ${esc(r.twist)}</div>`:""}
     </div>`).join("");
-  stage.innerHTML = `
-    <div class="step">Barrièrekaart · opgehaald deze sessie</div>
-    <h2>Wat het spelen ophaalde</h2>
-    <p class="lead">Elke ronde levert barrièredata op. Dit is de telemetrie die voedt
-      wélke facilitators ViiV bouwt — de brug van fase 1 (diagnose) naar fase 2 (activeren).</p>
-    <div class="log"><h3>Vastgelegd</h3>${rounds || '<p class="note">Nog niets.</p>'}</div>
+  return `
+    <div class="kicker">${t("log_k")}</div><h2>${t("log_h")}</h2><p class="lead">${t("log_lead")}</p>
+    <div class="log">${body||`<p class="muted">${t("log_none")}</p>`}</div>
     <div class="actions">
-      <button class="primary" onclick="newRound(state.log[0]?state.log[0].segment:'scepticus')">Nieuwe ronde</button>
-      <button onclick="copyLog(this)">Kopieer barrièrekaart</button>
-      <button class="link" onclick="reset()">Terug naar start</button>
+      <button class="primary" onclick="home()">${t("newround")}</button>
+      <button onclick="copyLog(this)">${t("copy")}</button>
     </div>`;
 }
-
-function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function copyLog(b){
-  const txt = state.log.map((r,idx)=>
-    `Ronde ${state.log.length-idx} — ${r.segment} — ${r.profile}\n`+
-    r.captures.map(c=>`  ${c.label}: ${c.value}`).join("\n")+
-    `\n  Twist: ${r.twist}`).join("\n\n");
-  navigator.clipboard.writeText(txt).then(()=>{
-    const t=b.textContent; b.textContent="Gekopieerd"; setTimeout(()=>b.textContent=t,1400);
-  });
+  const n=S.log.length;
+  const txt=S.log.map((r,idx)=>`${t("round")} ${n-idx} — ${r.title}\n`+
+    r.items.map(it=>`  ${it.k}: ${it.w||""}${it.h?`  → ${it.h}`:""}`).join("\n")+
+    (r.surfaced&&r.surfaced.length?`\n  ${t("surfaced_lbl")}: ${r.surfaced.join(" · ")}`:"")+
+    (r.twist?`\n  ${t("twist_lbl")}: ${r.twist}`:"")).join("\n\n");
+  navigator.clipboard.writeText(txt).then(()=>{ const o=b.textContent; b.textContent=t("copied"); setTimeout(()=>b.textContent=o,1400); });
 }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 
 render();
 </script>

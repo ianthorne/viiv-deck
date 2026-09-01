@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patient Pathways — prototype</title>
+<style>
+  :root{
+    --paper:#ffffff; --ink:#000000; --muted:#6b6b6b; --line:#000000;
+    --card-w: 300px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:ui-sans-serif,system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:860px;margin:0 auto;padding:40px 24px 80px}
+  header{border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:28px;
+    display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+  h1{font-size:20px;font-weight:600;margin:0;letter-spacing:.01em}
+  .sub{font-size:13px;color:var(--muted);margin:2px 0 0}
+  .seg{font-size:12px;color:var(--muted);text-transform:none}
+  .rail{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 28px;font-size:11px;color:var(--muted)}
+  .rail span{border:1px solid var(--muted);padding:2px 8px;border-radius:0}
+  .rail span.on{border-color:var(--ink);color:var(--ink);font-weight:600}
+  .step{margin:0 0 8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  h2{font-size:22px;font-weight:600;margin:0 0 6px;max-width:26ch}
+  p.lead{font-size:15px;color:#222;margin:0 0 22px;max-width:60ch}
+  /* card mirrors physical print spec 85x120mm */
+  .card{width:var(--card-w);aspect-ratio:85/120;border:1px solid var(--line);
+    padding:18px;position:relative;display:flex;flex-direction:column;background:var(--paper)}
+  .card.dashed{border-style:dashed}
+  .card .tab{position:absolute;top:-1px;border:1px solid var(--line);border-bottom:none;
+    height:16px;width:34px;background:var(--paper)}
+  .card .sym{width:26px;height:26px;margin-bottom:12px}
+  .card .kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .card .name{font-size:19px;font-weight:600;margin-bottom:10px}
+  .card .ctx{font-size:13px;color:#222}
+  .card .placeholder{margin-top:auto;font-size:11px;color:var(--muted);border-top:1px dashed var(--muted);padding-top:8px}
+  textarea{width:100%;min-height:96px;border:1px solid var(--line);border-radius:0;
+    padding:10px 12px;font:inherit;font-size:14px;resize:vertical;background:var(--paper);color:var(--ink)}
+  textarea:focus{outline:2px solid var(--ink);outline-offset:1px}
+  .actions{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+  button{font:inherit;font-size:14px;padding:9px 18px;border:1px solid var(--ink);
+    background:var(--paper);color:var(--ink);border-radius:0;cursor:pointer}
+  button.primary{background:var(--ink);color:var(--paper)}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  button.link{border:none;padding:9px 0;text-decoration:underline;background:none}
+  .choices{display:flex;flex-direction:column;gap:8px;margin:0 0 8px;max-width:60ch}
+  .choices label{border:1px solid var(--muted);padding:10px 12px;cursor:pointer;font-size:14px;display:flex;gap:10px;align-items:flex-start}
+  .choices label:hover{border-color:var(--ink)}
+  .choices input{margin-top:3px}
+  .log{border-top:1px solid var(--line);margin-top:36px;padding-top:20px}
+  .log h3{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .log .entry{border-left:2px solid var(--ink);padding:2px 0 2px 14px;margin:0 0 14px;font-size:14px}
+  .log .entry .q{color:var(--muted);font-size:12px;margin-bottom:2px}
+  .note{font-size:12px;color:var(--muted);margin-top:6px}
+  .err{color:#000;font-size:13px;border:1px solid #000;padding:6px 10px;margin-top:8px;display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Patient Pathways</h1>
+      <p class="sub">Neutraal SDM- &amp; barrière-instrument · playtest-prototype</p>
+    </div>
+    <div class="seg" id="segLabel"></div>
+  </header>
+
+  <div class="rail" id="rail"></div>
+  <div id="stage"></div>
+</div>
+
+<script>
+/* ---- data (placeholder, neutraal — geen klinische/product-claims) ---- */
+const PROFILES = [
+  {name:"Gabriel", tab:1, dashed:false, sym:"circle",
+   ctx:"Werkt in onregelmatige ploegendiensten. Reist een paar keer per jaar voor familie. Gesprek loopt nu vooral over virale onderdrukking, minder over het leven eromheen."},
+  {name:"Karen", tab:2, dashed:true, sym:"triangle",
+   ctx:"Mantelzorger met een volle agenda. Komt liever niet vaak naar het behandelcentrum. Stabiel ingesteld, ziet de kliniek doorgaans twee keer per jaar."}
+];
+const TWISTS = [
+  "Nieuwe baan met vaste kantoortijden — verandert dat de mogelijkheden?",
+  "Verhuizing naar een regio verder van het behandelcentrum.",
+  "Langere reis naar het buitenland gepland.",
+  "Toegenomen behoefte aan discretie op het werk."
+];
+const SYMS = {
+  circle:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#000" stroke-width="1.3"><circle cx="13" cy="13" r="9"/></svg>',
+  triangle:'<svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#000" stroke-width="1.3"><path d="M13 4 L22 21 L4 21 Z"/></svg>'
+};
+
+/* step definitions keyed by id; segment controls order (same loop, andere nadruk) */
+const STEPS = {
+  case:        {label:"Casus", kind:"case"},
+  barrieres:   {label:"Behandelpad & barrières", kind:"capture",
+                lead:"Hoe ziet het behandelpad hier eruit — en waar loopt de arts of verpleegkundige tegenaan? Denk aan capaciteit, planning en logistiek. Geen goed of fout; je verzamelt wat knelt.",
+                q:"Welke barrière kwam boven tafel?"},
+  artswaarden: {label:"Artswaarden", kind:"capture",
+                lead:"Wat weegt voor deze arts het zwaarst — effectiviteit, gemak, of de kwaliteit van leven van de patiënt? Peil het, oordeel niet.",
+                q:"Wat vindt deze arts het belangrijkst?"},
+  patientcasus:{label:"Patiëntcasus & gesprek", kind:"capture",
+                lead:"Voer het SDM-gesprek. Vraag niet naar de pil, maar naar het leven: wat speelt er dat de behandeling raakt? De keuze komt zo — dit is het gesprek.",
+                q:"Wat kwam er in het gesprek naar boven?"},
+  keuze:       {label:"Voorlopige keuze", kind:"choice"},
+  twist:       {label:"Twist", kind:"twist"},
+  standhouden: {label:"Houdt het stand?", kind:"capture",
+                lead:"Houdt je aanpak stand nu deze context erbij komt? Zo niet — wat blokkeert het in de praktijk? Dít is de barrière die je vastlegt.",
+                q:"Welke barrière legde de twist bloot?"}
+};
+const ORDER = {
+  scepticus: ["case","barrieres","artswaarden","patientcasus","keuze","twist","standhouden"],
+  believer:  ["case","patientcasus","artswaarden","barrieres","keuze","twist","standhouden"]
+};
+
+let state = null;
+
+function newRound(segment){
+  const profile = PROFILES[Math.floor(Math.random()*PROFILES.length)];
+  const twist   = TWISTS[Math.floor(Math.random()*TWISTS.length)];
+  state = {screen:"round", segment, order:ORDER[segment], i:0,
+           profile, twist, captures:[], log: state ? state.log : []};
+  render();
+}
+
+/* ---------- screens ---------- */
+function render(){
+  const seg = document.getElementById("segLabel");
+  const rail = document.getElementById("rail");
+  const stage = document.getElementById("stage");
+
+  if(!state){ // intro
+    seg.textContent = "";
+    rail.innerHTML = "";
+    stage.innerHTML = `
+      <div class="step">Start</div>
+      <h2>Kies het instappunt</h2>
+      <p class="lead">Eén adaptieve deck, geen twee spellen. De scepticus start bij het
+        behandelpad en de barrières; de believer schuift sneller door naar de patiëntcasus.
+        Zelfde loop, andere nadruk.</p>
+      <div class="actions">
+        <button class="primary" onclick="newRound('scepticus')">Sceptische / barrière-route</button>
+        <button onclick="newRound('believer')">Believer / SDM-route</button>
+      </div>
+      <p class="note">Demo-module voor de Cycle Meeting. Klinische en productinhoud is
+        bewust placeholder, in afwachting van door ViiV aangeleverde, compliance-getoetste tekst.</p>`;
+    return;
+  }
+
+  seg.textContent = state.segment === "scepticus" ? "Sceptische / barrière-route" : "Believer / SDM-route";
+  const key = state.order[state.i];
+  const step = STEPS[key];
+
+  rail.innerHTML = state.order.map((k,idx)=>
+    `<span class="${idx===state.i?'on':''}">${STEPS[k].label}</span>`).join("");
+
+  const stepNo = `Stap ${state.i+1} / ${state.order.length}`;
+
+  if(step.kind === "case"){
+    const p = state.profile;
+    stage.innerHTML = `
+      <div class="step">${stepNo} · ${step.label}</div>
+      <h2>De casus wordt uitgedeeld</h2>
+      <p class="lead">Een gecureerd, kloppend basisprofiel — een gegeven, geen bouwopdracht.
+        Je lost de patiënt niet op; je voert het gesprek eromheen.</p>
+      <div class="card ${p.dashed?'dashed':''}">
+        <div class="tab" style="${p.tab===1?'left:18px':'right:18px'}"></div>
+        ${SYMS[p.sym]}
+        <div class="kicker">Patiënt-basisprofiel</div>
+        <div class="name">${p.name}</div>
+        <div class="ctx">${p.ctx}</div>
+        <div class="placeholder">Comorbiditeit &amp; medicatie: [ViiV-aangeleverd — in afwachting]</div>
+      </div>
+      ${nav(true)}`;
+  }
+  else if(step.kind === "capture"){
+    stage.innerHTML = `
+      <div class="step">${stepNo} · ${step.label}</div>
+      <h2>${step.label}</h2>
+      <p class="lead">${step.lead}</p>
+      <textarea id="cap" placeholder="${step.q}">${existing(key)}</textarea>
+      <div class="err" id="err">Noteer eerst kort wat er boven tafel kwam.</div>
+      ${nav(true, ()=>true, key)}`;
+  }
+  else if(step.kind === "choice"){
+    const opts = [
+      "Ik open het gesprek over wat er in het leven speelt vóór ik over behandeling begin.",
+      "Ik breng eerst het behandelpad en de praktische kaders in kaart.",
+      "Ik peil eerst wat de arts zelf het zwaarst vindt wegen."
+    ];
+    stage.innerHTML = `
+      <div class="step">${stepNo} · ${step.label}</div>
+      <h2>Hoe geef je het gesprek vorm?</h2>
+      <p class="lead">Geen goed of fout — het gaat om de kwaliteit van het gesprek.
+        Leg je aanpak vast; zo dadelijk komt de twist.</p>
+      <div class="choices">
+        ${opts.map((o,idx)=>`<label><input type="radio" name="keuze" value="${o}"
+           ${existing('keuze')===o?'checked':''}> <span>${o}</span></label>`).join("")}
+      </div>
+      <div class="err" id="err">Kies eerst een aanpak.</div>
+      ${nav(true, ()=>true, 'keuze')}`;
+  }
+  else if(step.kind === "twist"){
+    stage.innerHTML = `
+      <div class="step">${stepNo} · ${step.label}</div>
+      <h2>Twist — onthuld ná je keuze</h2>
+      <p class="lead">De context verandert. Nu pas zie je of je keuze standhoudt.</p>
+      <div class="card dashed">
+        <div class="tab" style="right:18px"></div>
+        <svg class="sym" viewBox="0 0 26 26" fill="none" stroke="#000" stroke-width="1.3"><path d="M4 13 L22 13 M13 4 L13 22" transform="rotate(45 13 13)"/></svg>
+        <div class="kicker">Life-event</div>
+        <div class="ctx" style="font-size:15px">${state.twist}</div>
+      </div>
+      ${nav(true)}`;
+  }
+
+  // finish handled inside nav()
+}
+
+function existing(key){ const e = state.captures.find(c=>c.key===key); return e?e.value.replace(/"/g,'&quot;'):""; }
+
+function nav(showBack){
+  const last = state.i === state.order.length-1;
+  return `<div class="actions">
+    ${state.i>0?'<button onclick="back()">Vorige</button>':''}
+    <button class="primary" onclick="next()">${last?'Ronde afronden':'Volgende'}</button>
+    <button class="link" onclick="reset()">Opnieuw</button>
+  </div>`;
+}
+
+function collect(){
+  const key = state.order[state.i];
+  const step = STEPS[key];
+  const err = document.getElementById("err");
+  if(step.kind==="capture"){
+    const v = document.getElementById("cap").value.trim();
+    if(!v){ if(err) err.style.display="block"; return false; }
+    upsert(key, STEPS[key].label, v);
+  }
+  if(step.kind==="choice"){
+    const sel = document.querySelector('input[name="keuze"]:checked');
+    if(!sel){ if(err) err.style.display="block"; return false; }
+    upsert('keuze', 'Voorlopige keuze', sel.value);
+  }
+  return true;
+}
+function upsert(key,label,value){
+  const e = state.captures.find(c=>c.key===key);
+  if(e){ e.value=value; } else { state.captures.push({key,label,value}); }
+}
+
+function next(){
+  if(!collect()) return;
+  if(state.i < state.order.length-1){ state.i++; render(); }
+  else finishRound();
+}
+function back(){ collect(); state.i--; render(); }
+function reset(){ state=null; render(); }
+
+function finishRound(){
+  const entry = {segment:state.segment, profile:state.profile.name, twist:state.twist,
+                 captures:[...state.captures]};
+  state.log.unshift(entry);
+  renderLog();
+}
+
+function renderLog(){
+  const rail = document.getElementById("rail"); rail.innerHTML="";
+  const stage = document.getElementById("stage");
+  const rounds = state.log.map((r,idx)=>`
+    <div class="entry">
+      <div class="q">Ronde ${state.log.length-idx} · ${r.segment} · ${r.profile}</div>
+      ${r.captures.map(c=>`<div><strong>${c.label}:</strong> ${escapeHtml(c.value)}</div>`).join("")}
+      <div class="q" style="margin-top:6px">Twist: ${escapeHtml(r.twist)}</div>
+    </div>`).join("");
+  stage.innerHTML = `
+    <div class="step">Barrièrekaart · opgehaald deze sessie</div>
+    <h2>Wat het spelen ophaalde</h2>
+    <p class="lead">Elke ronde levert barrièredata op. Dit is de telemetrie die voedt
+      wélke facilitators ViiV bouwt — de brug van fase 1 (diagnose) naar fase 2 (activeren).</p>
+    <div class="log"><h3>Vastgelegd</h3>${rounds || '<p class="note">Nog niets.</p>'}</div>
+    <div class="actions">
+      <button class="primary" onclick="newRound(state.log[0]?state.log[0].segment:'scepticus')">Nieuwe ronde</button>
+      <button onclick="copyLog(this)">Kopieer barrièrekaart</button>
+      <button class="link" onclick="reset()">Terug naar start</button>
+    </div>`;
+}
+
+function escapeHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function copyLog(b){
+  const txt = state.log.map((r,idx)=>
+    `Ronde ${state.log.length-idx} — ${r.segment} — ${r.profile}\n`+
+    r.captures.map(c=>`  ${c.label}: ${c.value}`).join("\n")+
+    `\n  Twist: ${r.twist}`).join("\n\n");
+  navigator.clipboard.writeText(txt).then(()=>{
+    const t=b.textContent; b.textContent="Gekopieerd"; setTimeout(()=>b.textContent=t,1400);
+  });
+}
+
+render();
+</script>
+</body>
+</html>

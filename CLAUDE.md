@@ -1,122 +1,122 @@
-# Patient Pathways — prototype
+# ViiV deck — prototype
 
 Context for Claude Code. Read this fully before building. It carries decisions made
-in design sessions that are NOT re-derivable from the code alone.
+in design sessions that are NOT re-derivable from the code alone. v2 — 1 Sept 2026.
 
 ## What this is
 
 A physical **card game**, prototyped here as a single-page static web app, that helps
-ViiV field staff (account managers / MSLs) facilitate **shared decision-making (SDM)**
-conversations with HIV physicians. The web prototype exists to **playtest the mechanic**
-and to demo it live (GitHub Pages) — it mirrors a real paper deck.
+ViiV field staff (account managers / MSLs) support HIV physicians around
+**shared decision-making (SDM)** and the barriers in their treatment path. The web
+prototype exists to **playtest and demo live** (GitHub Pages); it mirrors a real paper deck.
 
-Client: ViiV Healthcare Netherlands, via Happy Horizon. Live role-play demo target:
-**Cycle Meeting, 24–25 September**.
+Client: ViiV Healthcare Netherlands, via Happy Horizon. Live demo target:
+**Cycle Meeting, 24–25 September 2026** (three weeks from v2).
 
 ## The one principle that governs every decision
 
 **This is a NEUTRAL SDM + barrier-diagnosis instrument. It is NOT a persuasion / promotion tool.**
 
-- There is **no "correct" treatment route**. The tool surfaces the complexity and
-  unpredictability of patient context; it does not steer toward Long-Acting (LAM/VnR).
-- SDM's job is to find the **right care per patient**, NOT to identify LAM candidates.
-  If the mechanic ever starts funnelling toward "is this patient suitable for LAM",
-  that is the known failure mode (a testrun collapsed into a patient-eligibility game).
-  Reject that framing in copy, scoring, and flow.
-- LAM adoption is a downstream *consequence* of removing barriers and better
-  conversations — never the target the tool points at.
-- Scoring (if any) measures **process quality**, never clinical outcome. Do not imply
-  a right answer with numbers.
+- There is **no "correct" treatment route**. The tool surfaces complexity of patient
+  context; it does not steer toward Long-Acting (LAM/VnR).
+- SDM's job is the **right care per patient**, NOT identifying LAM candidates. If the
+  mechanic starts funnelling toward "is this patient suitable for LAM", that is the known
+  failure mode (a testrun collapsed into a patient-eligibility game). Reject it in copy,
+  scoring and flow. LAM adoption is a downstream *consequence* of removing barriers,
+  never the target the tool points at.
+- Scoring (if any) measures **process quality**, never clinical outcome.
 
-Why neutrality is non-negotiable: (1) compliance — a promotional tool given to HCPs
-falls under the Gedragscode Geneesmiddelenreclame / IGJ oversight, and MSLs must stay
-non-promotional; a neutral instrument is the only version Medical Affairs can touch;
-(2) physicians are already willing to prescribe (89% in ViiV's 2026 NL qual tracking)
-but only ~2% of patients convert — the gap is operational barriers, not persuasion;
-if the tool feels like selling, HCPs disengage and you capture nothing.
+Why: (1) compliance — a promotional tool for HCPs falls under the Gedragscode
+Geneesmiddelenreclame / IGJ; MSLs must stay non-promotional; a neutral instrument is
+the only version Medical Affairs can touch. (2) Physicians are already willing (89%
+in ViiV's 2026 NL qual tracking) but ~2% of patients convert — the gap is operational
+barriers, not persuasion. If it feels like selling, HCPs disengage and you capture nothing.
 
-## Architecture: stable core + swappable modules
+## v2 decisions from the September workshop (supersede v1)
 
-The deck is **modular by construction**. One adaptive deck — NOT separate decks per
-segment, NOT expansion sets on day one.
+### 1. Two separate play MODES, chosen at the start — over ONE shared deck
+Playtests showed "one loop with different emphasis" was too subtle: forcing barrier-
+mapping and an SDM conversation into one loop produced the patient-identification spiral
+and role drift. These are two jobs with two loops:
 
-**CORE (stable, coherent, print/ship now, no regulatory blocker):**
-- SDM conversation loop + prompt cards
-- Patient **base profiles** — pre-built, clinically COHERENT, validated units
-  (archetype + plausible context). Never randomly composed from loose category draws
-  (that produced a "24yo with age-related osteoporosis" that broke credibility).
-- Twist / Life-Event cards — drawn on top AFTER a commitment; freely combinable because
-  they are life events, not clinical facts.
+- **Mode 1 — Treatment-path scan** (sceptics / undecided). **No patient.** The physician
+  is the expert on their own practice; the AM listens and maps where the path pinches
+  (capacity, scheduling & window, logistics/cold chain, funding/VoReZorg, follow-up).
+  Non-teaching by construction. Output: barrier map.
+- **Mode 2 — Patient case** (believers / advanced). A rich, coherent patient is dealt.
+  Loop: patient → opening → explore → provisional approach → twist → does it hold.
+  Output: reflection + the barriers the conversation exposes.
 
-**MODULES (volatile, slot-in, updatable without reprinting the core):**
-- ART medicine content — **compliance-gated, ViiV-supplied**. Leave as marked
-  placeholders. Do NOT invent clinical claims. (A 6-monthly injectable is anticipated;
-  it will arrive as a new medicine module.)
-- Implementation routes / **VoReZorg** — funding/logistics, changes over time.
-- Barriers + facilitators — centre-specific, evolves as facilitators are built.
-- Comorbidity clinical bodies — **ViiV-supplied**, left as placeholders.
+Modes are distinct LOOPS but must share one deck, one data model and one capture/log.
+NEVER let modes diverge into separate content sets (that would be two decks, double the
+compliance surface, and lose the reprint-free core). Both modes end in the same
+barrier map — this preserves the phase-1 (diagnose) → phase-2 (activate) chain.
 
-The same seam solves three problems at once: coherence, compliance/content-readiness,
-and a changing market. Keep the seam clean — blur it and the incoherence bug returns.
+### 2. Roles: the physician ALWAYS sits in the physician's chair; the AM never does
+v1's "conduct the SDM conversation" prompt put the AM in the doctor's seat. In the room
+that reads as the rep teaching the doctor how to talk to patients — patronising, and it
+backfired. Structural fix, not wording:
+- The **HCP is the physician** practising. Prompts never tell them HOW to do SDM; they
+  give them a patient to practise on.
+- The **AM is facilitator + the patient's voice** — a sparring partner, not a teacher.
+- The prototype has two **role views** (toggle in header, Mode 2 only): the physician
+  sees the case + reflection prompts; the facilitator sees the patient's scripted voice,
+  the hidden facts, the twist control and capture.
 
-## The round loop (the mechanic)
+### 3. Rich patient data — and the compliance distinction that allows it
+Playtest: "we knew too little about the patient to hold an SDM conversation."
+Profiles now carry demographics, medical picture, care use, lifestyle, and what the
+patient values. The distinction that makes this compliant:
+- **Case facts about a fictional patient** (suppressed since, BMI, genotype known/old,
+  comorbidity, appointment reliability, visit frequency) are NOT product claims. They
+  may be rich. They need **Michael's plausibility check** (coherence — the "24yo with
+  age-related osteoporosis" lesson), nothing more.
+- **Product specifics and benefits** (regimen name, efficacy, LAM advantages) stay
+  labelled placeholders: "[ViiV — pending]". Do not invent them.
+Deliberately, the suitability-relevant fields mirror the REAL NL barriers (appointment
+reliability #1, BMI, genotype, 2×/year contact frequency, travel >4 weeks, needle fear)
+so barriers surface naturally without the tool pushing anything.
 
-1. **Case is dealt** — a coherent base profile is *given*, never assembled by the player.
-2. **Conversation** — prompts drive an SDM dialogue about the patient's life/context.
-3. **Provisional choice** — how the player would shape the care conversation
-   (neutral — NOT "pick LAM").
-4. **Twist revealed** — a Life-Event card, revealed only after the commitment.
-5. **Does it hold?** — reflect whether the decision survives the new context; capture
-   the barrier that surfaced.
+### 4. Hidden-if-asked mechanic (rewards SDM without scoring right/wrong)
+Each profile has **hidden facts** the patient only gives away when the physician asks
+openly about life (work rhythm, relationship, travel, how they feel). The facilitator
+reveals them on the right open question; unasked, they stay hidden — that IS the
+exercise. Revealed facts surface in the physician's view and are logged. Keep this.
 
-Playing the loop *is* the barrier-elicitation instrument: where the conversation stalls
-or a route feels blocked = a barrier location. Capture it (this feeds the barrier map →
-which facilitators to build).
+### 5. Bilingual (NL/EN) with a language switch
+UI strings live in the `T` dictionary; content fields are `{nl, en}` objects resolved
+by `L()`. Every new string/content item must have both. Dutch is the default (used in NL
+sessions). Card-FACE final content is English per project convention.
 
-## Segments (entry point, not separate games)
+## Architecture: stable core + swappable modules (unchanged)
 
-Same loop, different emphasis/depth:
-- **Sceptics / Distractors** → enter via barriers & logistics (treatment path first).
-- **Believers / Advocates** → move faster to patient profiles & SDM depth.
+CORE (stable, print now): SDM loop + prompts; patient base profiles (coherent,
+validated); twist/life-event cards (freely combinable — events, not clinical facts).
+MODULES (volatile, slot-in, updatable without reprinting): ART medicine content
+(ViiV-gated; a 6-monthly injectable is anticipated); implementation routes/VoReZorg;
+barriers + facilitators (centre-specific); comorbidity clinical bodies (ViiV-gated).
 
-**First build target for the Cycle Meeting: the sceptic / barrier module.** It is the
-least tested and most at risk of sliding back into a product pitch, so it's the safest
-place to get neutrality right first. Build ONE fully worked demo module, not the whole deck.
-
-## Barriers in the NL landscape (from ViiV 2026 qual tracking — the backbone, don't re-brainstorm)
-
-Organisational/capacity (strongest): nurse shortage; in-clinic admin space/planning;
-waitlists. Structural/logistics: 2-monthly schedule + strict ±7-day window; cold chain.
-Financial: perceived costlier once homecare/nursing added; "cost-critical" duty.
-Professional/attitude: fear of virologic failure/blips; uncertainty identifying the
-"right" patient; clinical inertia. Patient-suitability (eligibility–suitability gap):
-appointment reliability (#1 exclusion), high BMI, unknown resistance/genotype,
-contact-frequency mismatch (stable patients seen ~2x/year — 2-monthly "medicalises"),
-travel/work. Market-readiness: HCPs in "waiting mode" for 6-monthly, infrastructure
-investment on hold. NL differs from international assumptions — don't import those.
-
-## Design / build conventions
+## Build conventions
 
 - **Aesthetic: stark monochrome, ink-minimising.** No colour. Cards differentiate by
-  **border style, line-art outline symbol, and index-tab position** — not colour.
-- Cards mirror the physical print spec: **85×120 mm** (portrait, ratio ~0.708),
-  2×2 per A4, single-sided, 100% actual size. On screen, keep card proportions ~0.708.
-- **Stack:** vanilla static HTML/CSS/JS, single file where reasonable, **no build step**
-  (must serve as-is from GitHub Pages). No framework required.
-- Language: prototype UI is **Dutch** (used in NL sessions). Final card-FACE content is
-  English per project convention; Figma briefs are English. Keep placeholder clinical
-  content clearly marked and empty pending ViiV input.
-- Compliance guardrail for you: never write invented clinical/product claims into cards.
-  Anything about medicine efficacy, comorbidity management, or LAM benefit stays a
-  labelled placeholder ("[ViiV-supplied — pending compliance]").
+  border style, line-art outline symbol and index-tab position. Display face: Century
+  Schoolbook stack (matches the deck's editorial identity); body: Helvetica/Arial.
+- Cards mirror print spec **85×120 mm** (aspect-ratio 85/120). 2×2 per A4.
+- **Stack:** vanilla static HTML/CSS/JS, single file, **no build step** — must serve as-is
+  from GitHub Pages. `index.v1.html` is kept for reference only.
+- State is in-memory; the barrier map is copied out via the clipboard button.
+  Persistence/export is a sensible next feature (localStorage is fine on Pages).
 
-## What "done for the CM" looks like
+## Scope for the Cycle Meeting (3 weeks)
 
-Show at 24–25 Sept: the resolved sceptic/barrier route, the segment logic, ONE playable
-module to actually rehearse with in the room, plus a build brief with a timeline for the rest.
+Do NOT build the whole matrix. Foundation is in place (mode select, i18n, role views,
+data model, both loops). Polish the mode that is role-played live in the room — likely
+**Mode 2**, since the CM demo is a role-play — and keep Mode 1 clean and functional.
+Get Michael/GA to check neutrality and the placeholder approach early. Test internally
+at least once before 24 Sept.
 
-## People (for tone/context only)
+## People (tone/context only)
 
-Ian (moderator/process design), Koen & Isabelle (agency, aligned on the above),
-Andrada (ViiV Marketing), Michael (ViiV Medical Affairs — clinical validation & compliance),
+Ian (moderator/process design), Koen & Isabelle (agency, aligned), Andrada (ViiV
+Marketing), Michael (ViiV Medical Affairs — clinical validation & compliance),
 Hiskya (ViiV PA/GA — critical adviser). Marjolein/Hans (copy), Bianca (design).
