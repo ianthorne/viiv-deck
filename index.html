@@ -27,7 +27,13 @@
 
   header{display:flex;justify-content:space-between;align-items:center;gap:20px;
     border-bottom:2px solid var(--viiv-sand);padding-bottom:16px;margin-bottom:28px;flex-wrap:wrap}
+  .left{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
   .brandwrap{display:flex;align-items:center;gap:14px}
+  .homelink{text-decoration:none;color:inherit;border-radius:8px}
+  .homelink:hover .brand{text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--viiv-sand)}
+  .homelink:focus-visible{outline:none;box-shadow:var(--focus)}
+  .backchip{display:none;font-size:12px;font-weight:500;padding:5px 11px;border:1px solid var(--navy-soft);border-radius:999px;background:var(--paper);color:var(--ink)}
+  .backchip.show{display:inline-block}
   .logo{height:22px;width:auto;display:block}
   .brand{font-size:19px;font-weight:600;line-height:1.15;margin:0;letter-spacing:-.01em}
   .brand small{display:block;font-size:12px;font-weight:400;color:var(--muted);margin-top:3px}
@@ -48,6 +54,7 @@
   .muted{color:var(--muted)}
   .note{font-size:12.5px;color:var(--muted);margin-top:12px;max-width:62ch}
   .rules{font-size:16px;font-weight:500;line-height:1.45;border-left:3px solid var(--viiv-sand);padding-left:14px;margin:0 0 20px;max-width:60ch}
+  .legend{font-size:12px;color:var(--muted);margin:-4px 0 10px;padding:6px 10px;border:1px solid var(--soft);border-radius:999px;display:inline-block;background:var(--paper)}
   .onflag{font-size:12px;border:1px solid var(--navy-soft);color:var(--ink);display:inline-block;padding:4px 10px;border-radius:999px;margin:0 0 16px;background:var(--paper)}
 
   .modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:6px}
@@ -154,9 +161,12 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="brandwrap">
-      <img class="logo" src="assets/viiv-logo.svg" alt="ViiV Healthcare" onerror="this.style.display='none'">
-      <h1 class="brand">ViiV deck<small id="tag"></small></h1>
+    <div class="left">
+      <a href="#" class="brandwrap homelink" onclick="home();return false;">
+        <img class="logo" src="assets/viiv-logo.svg" alt="ViiV Healthcare" onerror="this.style.display='none'">
+        <h1 class="brand">ViiV deck<small id="tag"></small></h1>
+      </a>
+      <button class="backchip" id="backChip" onclick="home()"></button>
     </div>
     <div class="ctl">
       <div class="seg-toggle" id="roleCtl" style="display:none"></div>
@@ -188,17 +198,18 @@ const T = {
     m1_lead:"Geen goed of fout. De arts vertelt hoe het in déze praktijk loopt; jij noteert wat knelt en wat zou helpen. Sla over wat niet speelt.",
     m1_what:"Wat knelt hier?", m1_help:"Wat zou helpen?",
     case_k:"De patiënt", case_h:"Je patiënt vandaag",
-    case_lead_doc:"Een uitgedeelde casus — een gegeven, geen puzzel. Lees het dossier zoals je een echt dossier zou lezen. Straks open je het gesprek.",
+    case_lead_doc:"Een uitgedeelde casus — een gegeven, geen puzzel. Lees het dossier zoals je een echt dossier zou lezen. De facilitator tegenover je speelt zo dadelijk [naam]: alles wat je wilt weten, vraag je hardop.",
     case_lead_fac:"Jij bent straks deze patiënt. Lees het dossier én de verborgen feiten: die geef je alleen prijs als de arts er open naar vraagt.",
     open_k:"Openen", open_h:"Hoe open je het gesprek?",
-    open_lead_doc:"In je eigen woorden. Niet wat de patiënt moet, maar wat je wilt weten over hoe het leven nu loopt.",
+    open_lead_doc:"In je eigen woorden, hardop tegen [naam]. Niet wat [naam] moet, maar wat je wilt weten over hoe het leven nu loopt.",
     open_lead_fac:"Laat de arts openen. Reageer als de patiënt — kort, natuurlijk. Onthul niets uit jezelf.",
     open_q:"Je openingszin of -vraag",
     explore_k:"Verkennen", explore_h:"Wat speelt er in het leven?",
-    explore_lead_doc:"Vraag door naar werk, ritme, reizen, relaties, wat de patiënt zelf belangrijk vindt. Wat naar boven komt, verschijnt hieronder.",
-    explore_lead_fac:"Onthul een verborgen feit alleen wanneer de arts er open naar vraagt. Niet gevraagd? Dan blijft het verborgen — dat is de oefening.",
+    explore_lead_doc:"[naam] zit tegenover je — de facilitator speelt de rol. Vraag hardop door naar werk, ritme, reizen, relaties en wat [naam] zelf belangrijk vindt. Wat [naam] je vertelt, verschijnt hieronder.",
+    explore_lead_fac:"Jij bént [naam]. Antwoord hardop, kort en natuurlijk. Vraagt de arts open naar iets uit de lijst hieronder, antwoord dan in de rol én tik 'Onthul' — zo verschijnt het bij de arts op het scherm. Niet gevraagd? Dan blijft het verborgen; dat is de oefening.",
     explore_q:"Wat kwam er in het gesprek naar boven?",
-    surfaced:"Wat naar boven kwam", nothing_yet:"Nog niets — vraag naar het leven, niet naar de pil.",
+    surfaced:"Wat [naam] vertelde", nothing_yet:"Nog niets — vraag [naam] naar het leven, niet naar de pil.",
+    legend:"Arts: vraagt en oefent · Facilitator: speelt [naam] en bedient het scherm",
     reveal:"Onthul", revealed:"Onthuld",
     plan_k:"Voorlopige aanpak", plan_h:"Hoe geef je het vervolg vorm?",
     plan_lead:"Geen goed of fout — het gaat om de kwaliteit van het gesprek. Leg je aanpak vast; daarna verandert de context.",
@@ -270,17 +281,18 @@ const T = {
     m1_lead:"No right or wrong. The physician describes how it runs in this practice; you note what pinches and what would help. Skip what doesn't apply.",
     m1_what:"What pinches here?", m1_help:"What would help?",
     case_k:"The patient", case_h:"Your patient today",
-    case_lead_doc:"A dealt case — a given, not a puzzle. Read the file as you would a real one. In a moment you open the conversation.",
+    case_lead_doc:"A dealt case — a given, not a puzzle. Read the file as you would a real one. The facilitator opposite you will play [name] in a moment: anything you want to know, ask out loud.",
     case_lead_fac:"You will be this patient. Read the file and the hidden facts: give those away only when the physician asks openly.",
     open_k:"Opening", open_h:"How do you open the conversation?",
-    open_lead_doc:"In your own words. Not what the patient should do, but what you want to know about how life is going right now.",
+    open_lead_doc:"In your own words, out loud to [name]. Not what [name] should do, but what you want to know about how life is going right now.",
     open_lead_fac:"Let the physician open. Respond as the patient — brief, natural. Reveal nothing unprompted.",
     open_q:"Your opening line or question",
     explore_k:"Explore", explore_h:"What's going on in their life?",
-    explore_lead_doc:"Ask about work, rhythm, travel, relationships, what the patient values. Whatever surfaces appears below.",
-    explore_lead_fac:"Reveal a hidden fact only when the physician asks openly. Not asked? It stays hidden — that is the exercise.",
+    explore_lead_doc:"[name] is sitting opposite you — the facilitator plays the role. Ask out loud about work, rhythm, travel, relationships and what [name] values. Whatever [name] tells you appears below.",
+    explore_lead_fac:"You ARE [name]. Answer out loud, brief and natural. When the physician asks openly about something in the list below, answer in role and tap 'Reveal' — it then appears on the physician's screen. Not asked? It stays hidden; that is the exercise.",
     explore_q:"What came up in the conversation?",
-    surfaced:"What surfaced", nothing_yet:"Nothing yet — ask about life, not the pill.",
+    surfaced:"What [name] told you", nothing_yet:"Nothing yet — ask [name] about life, not the pill.",
+    legend:"Physician: asks and practises · Facilitator: plays [name] and runs the screen",
     reveal:"Reveal", revealed:"Revealed",
     plan_k:"Provisional approach", plan_h:"How do you shape what comes next?",
     plan_lead:"No right or wrong — this is about the quality of the conversation. Commit to an approach; then the context shifts.",
@@ -431,6 +443,7 @@ const SYM = {
 let S = { lang:"nl", mode:null, role:"doc", i:0, profile:null, twist:null, revealed:[], caps:{}, log:[] };
 const t = k => T[S.lang][k];
 const L = o => (o && typeof o==="object" && !Array.isArray(o) && ("nl" in o)) ? (o[S.lang] ?? o.nl) : o;
+const F = x => String(x).replace(/\[naam\]|\[name\]/g, S.profile ? S.profile.name : "");
 
 function setLang(l){ S.lang=l; document.documentElement.lang=l; render(); }
 function setRole(r){ S.role=r; render(); }
@@ -448,6 +461,7 @@ function home(){ S.mode=null; S.i=0; render(); }
 /* ============ Render ============ */
 function render(){
   document.getElementById("tag").textContent = t("tag");
+  const bc=document.getElementById("backChip"); bc.textContent="\u2190 "+t("home"); bc.className="backchip"+(S.mode?" show":"");
   document.getElementById("langCtl").innerHTML = ["nl","en"].map(l=>
     `<button class="${S.lang===l?'on':''}" onclick="setLang('${l}')" aria-pressed="${S.lang===l}">${l.toUpperCase()}</button>`).join("");
   const rc = document.getElementById("roleCtl");
@@ -506,10 +520,10 @@ function mode1(){
 /* ---- Mode 2: patient case ---- */
 function mode2(){
   const P = S.profile, doc = S.role==="doc", n = t("m2_steps").length;
-  const head = (k,h) => `<div class="kicker">${t("step")} ${S.i+1} / ${n} · ${t(k)}</div><h2>${t(h)}</h2>` + (doc?"":script("m2"));
+  const head = (k,h) => `<div class="kicker">${t("step")} ${S.i+1} / ${n} · ${t(k)}</div><div class="legend">${F(t("legend"))}</div><h2>${t(h)}</h2>` + (doc?"":script("m2"));
   if(S.i===0) return `
       ${head("case_k","case_h")}
-      <p class="lead">${doc?t("case_lead_doc"):t("case_lead_fac")}</p>
+      <p class="lead">${F(doc?t("case_lead_doc"):t("case_lead_fac"))}</p>
       <div class="cardwrap">
         <div>${card(P)}<div class="actions" style="margin-top:10px"><button class="small" onclick="shuffleProfile()">${t("shuffle")}</button></div></div>
         <div>${dossier(P)}${doc?"":hiddenPanel(P,false)}</div>
@@ -517,12 +531,12 @@ function mode2(){
       ${nav()}`;
   if(S.i===1) return `
       ${head("open_k","open_h")}
-      <p class="lead">${doc?t("open_lead_doc"):t("open_lead_fac")}</p>
+      <p class="lead">${F(doc?t("open_lead_doc"):t("open_lead_fac"))}</p>
       ${doc ? `<textarea id="cap" placeholder="${t("open_q")}">${esc(S.caps.open||"")}</textarea><div class="err" id="err">${t("need_text")}</div>` : voice(P, L(P.prio))}
       ${nav()}`;
   if(S.i===2) return `
       ${head("explore_k","explore_h")}
-      <p class="lead">${doc?t("explore_lead_doc"):t("explore_lead_fac")}</p>
+      <p class="lead">${F(doc?t("explore_lead_doc"):t("explore_lead_fac"))}</p>
       ${doc ? surfacedPanel(P)+`<textarea id="cap" placeholder="${t("explore_q")}" style="margin-top:14px">${esc(S.caps.explore||"")}</textarea><div class="err" id="err">${t("need_text")}</div>` : hiddenPanel(P,true)}
       ${nav()}`;
   if(S.i===3){ const opts=t("plan_opts"); return `
@@ -537,7 +551,7 @@ function mode2(){
       <p class="lead">${doc?t("twist_lead_doc"):t("twist_lead_fac")}</p>
       <div class="cardwrap"><div><div class="card dashed"><div class="tab" style="right:18px"></div>${SYM.cross}
         <div class="ck">Life-event</div><div class="body" style="font-family:var(--display);font-size:17px;line-height:1.35">${L(S.twist)}</div></div>
-        ${doc?"":`<div class="actions" style="margin-top:10px"><button class="small" onclick="otherTwist()">${t("other_twist")}</button></div>`}</div></div>
+        <div class="actions" style="margin-top:10px"><button class="small" onclick="otherTwist()">${t("other_twist")}</button><span class="muted" style="font-size:12px">${TWISTS.indexOf(S.twist)+1} / ${TWISTS.length}</span></div></div></div>
       ${nav()}`;
   return `
       ${head("hold_k","hold_h")}
@@ -572,8 +586,8 @@ function hiddenPanel(P,interactive){
 }
 function surfacedPanel(P){
   const items = S.revealed.map(idx=>L(P.hidden[idx]));
-  return `<div class="revealed"><div class="ck">${t("surfaced")}</div>
-    ${items.length?items.map(x=>`<div>— ${x}</div>`).join(""):`<span class="muted">${t("nothing_yet")}</span>`}</div>`;
+  return `<div class="revealed"><div class="ck">${F(t("surfaced"))}</div>
+    ${items.length?items.map(x=>`<div>— ${x}</div>`).join(""):`<span class="muted">${F(t("nothing_yet"))}</span>`}</div>`;
 }
 function revealFact(idx){ if(!S.revealed.includes(idx)) S.revealed.push(idx); render(); }
 
