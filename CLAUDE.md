@@ -64,6 +64,17 @@ NEVER let modes diverge into separate content sets (that would be two decks, dou
 compliance surface, and lose the reprint-free core). Both modes end in the same
 barrier map — this preserves the phase-1 (diagnose) → phase-2 (activate) chain.
 
+### 2a. The physician's screen states the SITUATION, never the technique
+Screen copy addressed to the physician must never instruct how to doctor — no topic
+lists ("ask about work, rhythm, travel..."), no conversational coaching ("ask about
+life, not the pill"). The test: could the sentence hang on the wall of their own
+consulting room without insulting them? Two reasons this is hard law: (1) a pharma
+tool coaching a physician on anamnesis is patronising and backfires; (2) enumerating
+the exploration topics is the ANSWER KEY to the hidden-facts mechanic — it turns open
+questioning into a checklist. All teaching content lives in the Facilitator view
+(voice-over) or in the patient's mouth ("I only tell you what you ask me"), never on
+the physician's screen.
+
 ### 2. Roles: the physician ALWAYS sits in the physician's chair; the AM never does
 v1's "conduct the SDM conversation" prompt put the AM in the doctor's seat. In the room
 that reads as the rep teaching the doctor how to talk to patients — patronising, and it
