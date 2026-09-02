@@ -166,6 +166,8 @@
   .kpanel .kt{font-size:16px;font-weight:600;margin:0 0 2px;display:flex;align-items:center;gap:8px}
   .kpanel .kt .sym{width:20px;height:20px;margin:0}
   .kpanel .say{margin:10px 0 12px}
+  .peer{border:1px dashed var(--viiv-sand);background:var(--wash);border-radius:var(--r-sm);padding:12px 14px;margin:0 0 12px}
+  .peer .ck{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:500}
   .kpanel .say .line{font-size:15px}
   /* AM voice-over — the training layer */
   .say{background:var(--wash);border-radius:var(--r);padding:16px 18px;margin:0 0 18px;max-width:64ch}
@@ -218,7 +220,7 @@ const T = {
     start_k:"Start", start_h:"Welk spel spelen we?",
     start_lead:"Twee speelwijzen, één deck. Kies vooraf wat de sessie moet opleveren — zo blijft het gesprek op één doel.",
     m1_name:"Behandelpad-scan", m1_for:"Voor sceptici en twijfelaars · geen patiënt",
-    m1_desc:"De arts is de expert over de eigen praktijk. Jullie brengen samen in kaart waar het behandelpad knelt: capaciteit, planning, logistiek, financiering. Uitkomst: een barrièrekaart.",
+    m1_desc:"De arts is de expert over de eigen praktijk. Jullie brengen in kaart waar het behandelpad knelt — en waar het knelt, breng jij hoe andere centra het oplossen. Uitkomst: een barrièrekaart, voor de arts én voor het team.",
     m2_name:"Patiëntcasus", m2_for:"Voor believers en gevorderden · met patiënt",
     m2_desc:"Jouw instrument als facilitator: jij speelt de patiënt, onthult en legt vast. De arts voert het gesprek zonder scherm — sparringpartner, geen leraar. Digitale artsweergave is optie 2. Uitkomst: reflectie plus de barrières die het gesprek blootlegt.",
     start_note:"Klinische feiten in casussen zijn fictief en worden op plausibiliteit getoetst door Medical. Specificatie van middelen blijft leeg tot ViiV compliant tekst aanlevert.",
@@ -234,6 +236,7 @@ const T = {
     route_none:"Geen route", leans:"leunt hierop",
     knelt_k:"Waar het knelt — vraag door", loopt_k:"Waar het loopt — vraag óók door", weet_k:"Waar je het niet weet",
     loopt_what:"Wat precies loopt hier? Hoe is het geregeld?", loopt_why:"Waarom werkt het bij jullie? Wat is de voorwaarde?", weet_q:"Wie weet dit bij jullie?",
+    peer_k:"Zo pakt een ander centrum dit aan",
     say_loopt:"Mooi dat dit loopt. Wat hebben jullie precies geregeld — en waarom werkt dat juist bij jullie?",
     why_loopt:"Twee vragen, bewust apart. Het wát is het mechanisme dat een ander centrum kan overnemen; het waaróm is de voorwaarde waaraan het daar ook moet voldoen. Zonder het waarom deel je een recept zonder ingrediënten.",
     say_weet:"Geen probleem — wie zou dit bij jullie weten?",
@@ -293,8 +296,8 @@ const T = {
     practice_lead:"Uit de scan: hier knelt het in deze praktijk. Geen verdict over een optie — een gegeven dat de patiënt mee kan wegen. Is dit voor déze patiënt een drempel, of niet?",
     practice_means:"Voor het gesprek",
     m1_say:[
-      {say:"Ik leg vijf kaarten neer — dat is het behandelpad, van capaciteit tot opvolging. Wil je ze zelf even sorteren: wat loopt, wat knelt, en waar je het niet weet? Er is geen goed antwoord.", why:"De arts sorteert met de handen; jij vraagt. Zo is de arts de expert en jij de luisteraar — niet de interviewer."},
-      {say:"Dank je. Wat ik heb genoteerd is waar het knelt en wat zou helpen — en ook waar het bij jullie juist goed loopt. Klopt dat zo? Dit gaat naar ons team om te kijken waar wij kunnen ondersteunen.", why:"Je sluit eerlijk af met wat er met de inzichten gebeurt. Waar het wél loopt is net zo waardevol: dat kunnen we delen met centra waar het knelt."}
+      {say:"Ik heb bij andere centra opgehaald hoe zij dit organiseren. Ik leg vijf kaarten neer — het behandelpad, van capaciteit tot opvolging. Wil je ze zelf sorteren: wat loopt, wat knelt, waar weet je het niet? Waar het knelt, laat ik zien wat andere centra deden. Er is geen goed antwoord.", why:"Je komt brengen, niet halen — de peer-kennis is de ruil en de reden dat een scepticus dit kwartier geeft. Is de bank nog dun, zeg dat eerlijk: \u2018dit is wat we tot nu toe zien\u2019."},
+      {say:"Dank je. Deze kaart is van jou — ik laat hem hier. Ik kom er op een afgesproken moment op terug, op precies deze knelpunten, met wat andere centra doen. En waar het bij jullie goed loopt: mag ik dat geanonimiseerd delen met centra waar het knelt?", why:"Drie dingen sluiten de ruil: de kaart is van de arts, de terugkeer heeft een datum, en delen van wat loopt gebeurt met toestemming."}
     ],
     m2_say:[
       {say:"Ik geef je een patiënt. Geen puzzel om op te lossen — gewoon iemand die vandaag in je spreekkamer zit. Neem even de tijd voor het dossier.", why:"'Gegeven, geen puzzel' voorkomt dat de arts de patiënt gaat identificeren in plaats van het gesprek te voeren."},
@@ -311,7 +314,7 @@ const T = {
     start_k:"Start", start_h:"Which game are we playing?",
     start_lead:"Two ways to play, one deck. Choose upfront what the session should produce — it keeps the conversation on a single purpose.",
     m1_name:"Treatment-path scan", m1_for:"For sceptics and the undecided · no patient",
-    m1_desc:"The physician is the expert on their own practice. Together you map where the treatment path pinches: capacity, scheduling, logistics, funding. Output: a barrier map.",
+    m1_desc:"The physician is the expert on their own practice. Together you map where the treatment path pinches — and where it pinches, you bring how other centres solve it. Output: a barrier map, for the physician as well as the team.",
     m2_name:"Patient case", m2_for:"For believers and advanced users · with a patient",
     m2_desc:"Your instrument as facilitator: you play the patient, reveal and capture. The physician has the conversation without a screen — a sparring partner, not a teacher. A digital physician view is option 2. Output: reflection plus the barriers the conversation surfaces.",
     start_note:"Clinical facts in cases are fictional and checked for plausibility by Medical. Product specifics stay empty until ViiV supplies compliant copy.",
@@ -327,6 +330,7 @@ const T = {
     route_none:"No route", leans:"leans on this",
     knelt_k:"Where it pinches — ask further", loopt_k:"Where it runs — ask further too", weet_k:"Where you don't know",
     loopt_what:"What exactly runs here? How is it arranged?", loopt_why:"Why does it work for you? What is the precondition?", weet_q:"Who would know this in your practice?",
+    peer_k:"How another centre approaches this",
     say_loopt:"Good that this runs. What exactly have you arranged — and why does that work here in particular?",
     why_loopt:"Two questions, deliberately apart. The what is the mechanism another centre can adopt; the why is the precondition it must also meet. Without the why you share a recipe without the ingredients.",
     say_weet:"No problem — who would know this in your practice?",
@@ -386,8 +390,8 @@ const T = {
     practice_lead:"From the scan: this is where this practice pinches. Not a verdict on any option — a given the patient can weigh. Is this a hurdle for this patient, or not?",
     practice_means:"For the conversation",
     m1_say:[
-      {say:"I'm laying down five cards — that's the treatment path, from capacity to follow-up. Would you sort them yourself: what runs, what pinches, and where you don't know? There's no right answer.", why:"The physician sorts with their hands; you ask. That makes them the expert and you the listener — not the interviewer."},
-      {say:"Thank you. What I've noted is where it pinches and what would help — and where it runs well for you. Is that right? This goes to our team to see where we can support.", why:"You close honestly with what happens to the insights. Where it does run is just as valuable: we can share that with centres where it pinches."}
+      {say:"I've gathered how other centres organise this. I'm laying down five cards — the treatment path, from capacity to follow-up. Would you sort them: what runs, what pinches, where you don't know? Where it pinches, I'll show what other centres did. There's no right answer.", why:"You come to bring, not to take — the peer knowledge is the exchange, and the reason a sceptic gives you this quarter-hour. If the bank is still thin, say so honestly: \u2018this is what we see so far\u2019."},
+      {say:"Thank you. This map is yours — I'll leave it here. I'll come back at an agreed moment on exactly these pinch points, with what other centres do. And where it runs well for you: may I share that, anonymised, with centres where it pinches?", why:"Three things close the exchange: the map belongs to the physician, the return has a date, and sharing what runs happens with consent."}
     ],
     m2_say:[
       {say:"I'm giving you a patient. Not a puzzle to solve — just someone sitting in your consulting room today. Take a moment with the file.", why:"'Given, not a puzzle' stops the physician identifying the patient instead of having the conversation."},
@@ -470,23 +474,23 @@ const SCAN = [
   {k:"cap", sym:"grid", say:{nl:"Wie doet wat hier — en waar wordt het krap?", en:"Who does what here — and where does it get tight?"}, why:{nl:"Je opent als luisteraar; de arts is de expert over de eigen praktijk.", en:"You open as a listener; the physician is the expert on their practice."},
    t:{nl:"Capaciteit & personeel", en:"Capacity & staffing"},
    s:{nl:"Wie doet wat in het behandelpad? Is er verpleegkundige capaciteit, ruimte en tijd voor extra contactmomenten?", en:"Who does what along the path? Is there nursing capacity, space and time for additional contact moments?"},
-   m:{nl:"Elke aanpak die extra contactmomenten in de kliniek vraagt, hangt hiervan af.", en:"Any approach that needs extra clinic contact moments depends on this."}},
+   m:{nl:"Elke aanpak die extra contactmomenten in de kliniek vraagt, hangt hiervan af.", en:"Any approach that needs extra clinic contact moments depends on this."}, peer:{nl:"[Geanonimiseerd peer-voorbeeld — te valideren door Medical]", en:"[Anonymised peer example — to be validated by Medical]"}},
   {k:"sch", sym:"clock", say:{nl:"Stel dat een behandeling strakkere afspraakvensters vraagt — hoe past dat in jullie agenda? En wat gebeurt er nu als iemand een afspraak mist?", en:"Suppose a treatment needed tighter appointment windows — how would that fit your diary? And what happens today when someone misses one?"}, why:{nl:"Hypothetisch vragen haalt de lading eraf. Je toetst een praktijk, geen persoon.", en:"Hypotheticals take the charge out. You're testing a practice, not a person."},
    t:{nl:"Planning & venster", en:"Scheduling & window"},
    s:{nl:"Hoe zouden strakkere afspraakvensters passen in de huidige planning? Wat gebeurt er bij een gemiste afspraak?", en:"How would tighter appointment windows fit current scheduling? What happens on a missed appointment?"},
-   m:{nl:"Een aanpak met een strak afspraakvenster vraagt hier meer van de planning — en van de patiënt.", en:"An approach with a tight appointment window asks more of scheduling here — and of the patient."}},
+   m:{nl:"Een aanpak met een strak afspraakvenster vraagt hier meer van de planning — en van de patiënt.", en:"An approach with a tight appointment window asks more of scheduling here — and of the patient."}, peer:{nl:"[Geanonimiseerd peer-voorbeeld — te valideren door Medical]", en:"[Anonymised peer example — to be validated by Medical]"}},
   {k:"log", sym:"box", say:{nl:"Koeling, voorraad, apotheek, bezorging aan huis — waar zou de keten bij jullie als eerste vastlopen?", en:"Refrigeration, stock, pharmacy, home delivery — where would the chain jam first with you?"}, why:{nl:"Concreet en operationeel. Hier komen barrières boven die in geen enkele folder staan.", en:"Concrete and operational. This is where barriers surface that no leaflet mentions."},
    t:{nl:"Logistiek & opslag", en:"Logistics & storage"},
    s:{nl:"Koeling, voorraad, apotheek, thuisbezorging — waar loopt de keten vast?", en:"Refrigeration, stock, pharmacy, home delivery — where does the chain jam?"},
-   m:{nl:"Een aanpak die koeling of aparte logistiek vraagt, loopt hier tegen de keten aan.", en:"An approach that needs refrigeration or separate logistics runs into the chain here."}},
+   m:{nl:"Een aanpak die koeling of aparte logistiek vraagt, loopt hier tegen de keten aan.", en:"An approach that needs refrigeration or separate logistics runs into the chain here."}, peer:{nl:"[Geanonimiseerd peer-voorbeeld — te valideren door Medical]", en:"[Anonymised peer example — to be validated by Medical]"}},
   {k:"fin", sym:"circle", say:{nl:"Wie zou de extra bezoeken en de toediening moeten dragen — en is er een route die bij jullie realistisch is?", en:"Who would have to carry the extra visits and the administration — and is there a route that's realistic for you?"}, why:{nl:"Financiering is vaak het echte knelpunt. Vraag naar haalbaar, niet naar wenselijk.", en:"Funding is often the real pinch. Ask what's workable, not what's desirable."},
    t:{nl:"Financiering & VoReZorg", en:"Funding & VoReZorg"},
    s:{nl:"Wie draagt de kosten van extra bezoeken, toediening en thuiszorg? Welke route is haalbaar in deze praktijk?", en:"Who carries the cost of extra visits, administration and home care? Which route is workable in this practice?"},
-   m:{nl:"Zonder haalbare financieringsroute is een aanpak hier op papier beschikbaar, in de praktijk niet vanzelfsprekend.", en:"Without a workable funding route an approach is available on paper here, not self-evidently in practice."}},
+   m:{nl:"Zonder haalbare financieringsroute is een aanpak hier op papier beschikbaar, in de praktijk niet vanzelfsprekend.", en:"Without a workable funding route an approach is available on paper here, not self-evidently in practice."}, peer:{nl:"[Geanonimiseerd peer-voorbeeld — te valideren door Medical]", en:"[Anonymised peer example — to be validated by Medical]"}},
   {k:"fup", sym:"loop", say:{nl:"Als iemand niet reageert of wegblijft — wie merkt dat, en wie belt?", en:"If someone doesn't respond or stops coming — who notices, and who calls?"}, why:{nl:"Opvolging is de barrière die het minst zichtbaar is en het meest bepaalt.", en:"Follow-up is the barrier that's least visible and most decisive."},
    t:{nl:"Opvolging", en:"Follow-up"},
    s:{nl:"Hoe worden patiënten opgevolgd die niet reageren of afspraken missen? Wie belt, wie bewaakt?", en:"How are non-responding or no-show patients followed up? Who calls, who monitors?"},
-   m:{nl:"Een aanpak die strikte opvolging vraagt, leunt op wie hier belt en bewaakt.", en:"An approach that needs strict follow-up leans on who calls and monitors here."}}
+   m:{nl:"Een aanpak die strikte opvolging vraagt, leunt op wie hier belt en bewaakt.", en:"An approach that needs strict follow-up leans on who calls and monitors here."}, peer:{nl:"[Geanonimiseerd peer-voorbeeld — te valideren door Medical]", en:"[Anonymised peer example — to be validated by Medical]"}}
 ];
 
 /* Implementation-route cards (organisational, neutral). leans = path steps the route depends on */
@@ -572,10 +576,11 @@ function mode1(){
   const leans = route ? route.leans : [];
   const by = st => SCAN.filter(p=>S.sort[p.k]===st);
   const lab = () => `style="font-size:11.5px;color:var(--muted);display:block;margin-bottom:4px;font-weight:500"`;
-  const panel = (p, sayTxt, whyTxt, fields) => `
+  const panel = (p, sayTxt, whyTxt, fields, peer) => `
       <div class="kpanel">
         <h3 class="kt">${SYM[p.sym]}${L(p.t)}</h3>
         <div class="say"><div class="ck">${t("say_k")}</div><p class="line">\u201c${sayTxt}\u201d</p><div class="why"><b>${t("why_k")}:</b> ${whyTxt}</div></div>
+        ${peer?`<div class="peer"><div class="ck">${t("peer_k")}</div><p style="margin:0;font-size:13.5px">${L(peer)}</p></div>`:""}
         <div style="display:grid;grid-template-columns:${fields.length>1?'1fr 1fr':'1fr'};gap:12px">
           ${fields.map(([id,lbl])=>`<div><label ${lab()}>${lbl}</label><textarea id="${id}_${p.k}" aria-label="${lbl}" style="min-height:70px">${esc(S.caps[p.k+"_"+id]||"")}</textarea></div>`).join("")}
         </div>
@@ -606,7 +611,7 @@ function mode1(){
     </div>
     <p class="hint">${t("sorted_hint")}</p>
     ${kn.length?`<div class="kicker">${t("knelt_k")}</div>`:""}
-    ${kn.map(p=>panel(p, L(p.say), L(p.why), [["w",t("m1_what")],["h",t("m1_help")]])).join("")}
+    ${kn.map(p=>panel(p, L(p.say), L(p.why), [["w",t("m1_what")],["h",t("m1_help")]], p.peer)).join("")}
     ${lo.length?`<div class="kicker" style="margin-top:6px">${t("loopt_k")}</div>`:""}
     ${lo.map(p=>panel(p, t("say_loopt"), t("why_loopt"), [["ok",t("loopt_what")],["okw",t("loopt_why")]])).join("")}
     ${we.length?`<div class="kicker" style="margin-top:6px">${t("weet_k")}</div>`:""}

@@ -53,7 +53,21 @@ and role drift. These are two jobs with two loops:
   precondition it must also meet) — two fields, deliberately apart, because a facilitator
   without its precondition is a recipe without ingredients;
   weet niet → who would know (not a dead end: the next person to talk to, usually the
-  nurse or pharmacist). Never treat "loopt" as a state to skip past. Physical version: 5 path cards + 3 route cards + 3 zones on
+  nurse or pharmacist). Never treat "loopt" as a state to skip past.
+
+  **Value design — the scan is an EXCHANGE, not extraction.** A busy physician has no
+  reason to brief pharma; the scan must pay for its quarter-hour in the room, that day.
+  The engine is reciprocity via peer implementation knowledge: ViiV is the only party
+  that sees inside all treatment centres, so the AM comes to BRING ("here's how other
+  centres solve this pinch"), not to collect. Consequences, all implemented and to be
+  preserved: the opening line leads with what the AM brings; every "knelt" panel has a
+  **peer slot** ("Zo pakt een ander centrum dit aan") — placeholder text until Michael
+  validates anonymised examples, and when the bank is thin the AM says so honestly; the
+  closing gives the map to the physician ("deze kaart is van jou"), commits to a DATED
+  return on exactly these pinch points, and asks consent before sharing "what runs"
+  with other centres. Each completed scan feeds the peer bank (that is why loopt
+  captures what+why). Never revert the opener to "help us understand" — for sceptics
+  that is the version that gets declined. Physical version: 5 path cards + 3 route cards + 3 zones on
   the table. Never let this drift back into a questionnaire the AM fills in.
 - **Mode 2 — Patient case** (believers / advanced). A rich, coherent patient is dealt.
   Loop: patient → opening → explore → provisional approach → twist → does it hold.
